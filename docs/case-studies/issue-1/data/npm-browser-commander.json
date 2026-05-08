@@ -1,0 +1,18 @@
+{
+  "name": "browser-commander",
+  "version": "0.8.0",
+  "description": "Universal browser automation library that supports both Playwright and Puppeteer with a unified API",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/link-foundation/browser-commander.git"
+  },
+  "license": "UNLICENSE",
+  "keywords": [
+    "browser",
+    "automation",
+    "playwright",
+    "puppeteer",
+    "testing",
+    "e2e"
+  ]
+}

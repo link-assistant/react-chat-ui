@@ -1,0 +1,39 @@
+{
+  "name": "@assistant-ui/react",
+  "version": "0.14.0",
+  "description": "TypeScript/React library for AI Chat",
+  "homepage": "https://www.assistant-ui.com/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/assistant-ui/assistant-ui.git",
+    "directory": "packages/react"
+  },
+  "license": "MIT",
+  "keywords": [
+    "radix-ui",
+    "nextjs",
+    "vercel",
+    "ai-sdk",
+    "react",
+    "components",
+    "ui",
+    "frontend",
+    "tailwind",
+    "shadcn",
+    "assistant",
+    "openai",
+    "ai",
+    "chat",
+    "chatbot",
+    "copilot",
+    "ai-chat",
+    "ai-chatbot",
+    "ai-assistant",
+    "ai-copilot",
+    "chatgpt",
+    "gpt4",
+    "gpt-4",
+    "conversational-ui",
+    "conversational-ai"
+  ]
+}

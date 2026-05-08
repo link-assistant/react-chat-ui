@@ -1,0 +1,30 @@
+{
+  "name": "@cometchat/chat-uikit-react",
+  "version": "6.4.3",
+  "description": "Ready-to-use Chat UI Components for React(Javascript/Web)",
+  "homepage": "https://www.cometchat.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cometchat/cometchat-uikit-react.git#v6"
+  },
+  "license": "https://www.cometchat.com/legal-terms-of-service",
+  "keywords": [
+    "CometChat",
+    "messaging",
+    "message",
+    "uikit",
+    "React",
+    "chat-uikit",
+    "uikit-react",
+    "react-uikit",
+    "chat-uikit-react",
+    "text",
+    "image",
+    "voice",
+    "audio",
+    "chat",
+    "video",
+    "ui components",
+    "webRTC"
+  ]
+}

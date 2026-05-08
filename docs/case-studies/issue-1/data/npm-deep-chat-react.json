@@ -1,0 +1,27 @@
+{
+  "name": "deep-chat-react",
+  "version": "2.4.2",
+  "description": "Customizable chat component for AI APIs",
+  "homepage": "https://deepchat.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OvidijusParsiunas/deep-chat.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ai",
+    "chat",
+    "bot",
+    "chatbot",
+    "assistant",
+    "openai",
+    "chatgpt",
+    "react",
+    "vue",
+    "angular",
+    "solid",
+    "svelte",
+    "next",
+    "component"
+  ]
+}

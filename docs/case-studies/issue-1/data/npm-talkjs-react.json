@@ -1,0 +1,29 @@
+{
+  "name": "@talkjs/react",
+  "version": "0.1.12",
+  "description": "Official TalkJS SDK for React",
+  "homepage": "https://talkjs.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talkjs/talkjs-react.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "chat",
+    "chat api",
+    "chat sdk",
+    "react chat",
+    "react chat api",
+    "messaging",
+    "talk",
+    "talkjs",
+    "talkjs react",
+    "real-time messaging",
+    "real-time chat",
+    "direct messaging",
+    "user-to-user chat",
+    "private messaging",
+    "group chat",
+    "react"
+  ]
+}

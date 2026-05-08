@@ -1,0 +1,30 @@
+{
+  "name": "@chatscope/chat-ui-kit-react",
+  "version": "2.1.1",
+  "description": "React component library for creating chat interfaces",
+  "homepage": "https://chatscope.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatscope/chat-ui-kit-react.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "chat",
+    "react",
+    "reactjs",
+    "ui",
+    "user interface",
+    "components",
+    "ui kit",
+    "communication",
+    "conversation",
+    "toolkit",
+    "library",
+    "frontend",
+    "reusable",
+    "feed",
+    "comments",
+    "social",
+    "talk"
+  ]
+}

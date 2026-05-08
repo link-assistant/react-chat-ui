@@ -1,0 +1,17 @@
+{
+  "name": "doublets-web",
+  "version": "0.1.2",
+  "description": "WebAssembly bindings for the LinksPlatform Doublets associative storage library.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linksplatform/doublets-web.git"
+  },
+  "license": "Unlicense",
+  "keywords": [
+    "associative",
+    "doublets",
+    "linksplatform",
+    "wasm",
+    "webassembly"
+  ]
+}
