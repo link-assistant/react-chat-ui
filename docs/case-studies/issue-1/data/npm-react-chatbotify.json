@@ -1,0 +1,20 @@
+{
+  "name": "react-chatbotify",
+  "version": "2.5.0",
+  "description": "A modern React library for creating flexible and extensible chatbots.",
+  "homepage": "https://react-chatbotify.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/react-chatbotify/react-chatbotify.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "chat",
+    "chatbot",
+    "conversational-bot",
+    "conversational-ui",
+    "frontend-library",
+    "react-chatbotify"
+  ]
+}
