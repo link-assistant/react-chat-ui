@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+### Minor Changes
+
+- 893f73c: Add a React chat demo gallery with theme and language controls, a Doublets-compatible Unicode data store, browser-commander E2E coverage, and issue #1 case study documentation.
+
 ## 0.8.5
 
 ### Patch Changes
