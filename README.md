@@ -1,14 +1,20 @@
 # React Chat UI
 
-React chat UI research demos with theme and language switching, fake chat data,
-Unicode-safe Doublets storage, and browser-commander E2E verification.
+React chat UI research demos with real package previews, source-code cost,
+theme and language switching, fake chat data, Unicode-safe Doublets storage,
+and browser-commander E2E verification.
 
 ## What Is Included
 
 - Eight researched React chat profiles covering hosted SDKs, UIKit libraries,
   open-source component kits, and AI chat widgets.
+- Live local previews for ChatScope, React Chat Elements, and Deep Chat, plus
+  credential/runtime-gated source blocks for hosted SDKs.
 - A Vite-powered demo gallery in `docs/chat-demos`.
+- Source code, line/symbol code cost, version, license, GitHub stars, release
+  date, render duration, heap estimate, and DOM node metrics for each demo.
 - Theme and language controls rendered by default for every demo.
+- A working markdown composer that appends messages inside the active demo.
 - A fake chat data store that encodes localized message strings as Unicode code
   points in a Doublets-compatible graph, with an async `doublets-web` loader.
 - Browser-commander E2E tests that exercise every demo and generate a review
@@ -35,7 +41,7 @@ Open the Vite URL printed by `npm run demo:dev` to inspect the chat demos.
 | `npm run test:all`   | Run unit tests and E2E tests                   |
 
 The E2E screenshot is written to
-`docs/screenshots/issue-1-chat-demos.png`.
+`docs/screenshots/issue-3-chat-demos.png`.
 
 ## Package API
 
@@ -77,8 +83,9 @@ browser-commander checks locally, deploys the static build to GitHub Pages on
 
 ## Research
 
-The issue #1 case study includes captured issue/PR data, npm package metadata,
-GitHub action version checks, requirements mapping, and solution plans:
+The case studies include captured issue/PR data, npm package metadata,
+requirements mapping, and solution plans:
 
 - [Issue #1 case study](docs/case-studies/issue-1/README.md)
+- [Issue #3 case study](docs/case-studies/issue-3/README.md)
 - [Chat demo gallery](docs/chat-demos/index.html)

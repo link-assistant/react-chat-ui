@@ -7,6 +7,148 @@ const createMessage = (id, authorId, sentAt, status, text, meta = {}) => ({
   ...meta,
 });
 
+const normalizeSourceCode = (sourceCode) => sourceCode.trim();
+
+const createIntegration = (integration) => {
+  const sourceCode = normalizeSourceCode(integration.sourceCode);
+
+  return {
+    ...integration,
+    sourceCode,
+    codeLineCount: sourceCode.split('\n').length,
+    codeSymbolCount: sourceCode.length,
+  };
+};
+
+const chatDemoSources = {
+  streamTeam: `
+import {
+  Chat,
+  Channel,
+  ChannelHeader,
+  MessageInput,
+  MessageList,
+  Thread,
+  Window,
+} from 'stream-chat-react';
+import 'stream-chat-react/dist/css/v2/index.css';
+
+export function StreamTeamDemo({ client, channel }) {
+  return (
+    <Chat client={client}>
+      <Channel channel={channel}>
+        <Window>
+          <ChannelHeader />
+          <MessageList />
+          <MessageInput />
+        </Window>
+        <Thread />
+      </Channel>
+    </Chat>
+  );
+}`,
+  sendbirdMarketplace: `
+import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
+import GroupChannel from '@sendbird/uikit-react/GroupChannel';
+import '@sendbird/uikit-react/dist/index.css';
+
+export function SendbirdMarketplaceDemo({ appId, userId, channelUrl }) {
+  return (
+    <SendbirdProvider appId={appId} userId={userId}>
+      <GroupChannel channelUrl={channelUrl} />
+    </SendbirdProvider>
+  );
+}`,
+  cometchatSupport: `
+import {
+  CometChatConversationsWithMessages,
+  CometChatUIKit,
+} from '@cometchat/chat-uikit-react';
+import '@cometchat/chat-uikit-react/css-variables.css';
+
+export async function mountCometChatSupportDemo(settings) {
+  await CometChatUIKit.init(settings);
+
+  return <CometChatConversationsWithMessages />;
+}`,
+  talkjsCommerce: `
+import Talk from 'talkjs';
+import { Chatbox, Session } from '@talkjs/react';
+
+export function TalkJsCommerceDemo({ appId, user, conversationId }) {
+  return (
+    <Session appId={appId} userId={user.id}>
+      <Chatbox conversationId={conversationId} style={{ height: 520 }} />
+    </Session>
+  );
+}`,
+  chatscopeCommunity: `
+import {
+  ChatContainer,
+  MainContainer,
+  Message,
+  MessageList,
+} from '@chatscope/chat-ui-kit-react';
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+
+export function ChatScopeCommunityDemo({ messages }) {
+  return (
+    <MainContainer>
+      <ChatContainer>
+        <MessageList>
+          {messages.map((message) => (
+            <Message key={message.id} model={message.model} />
+          ))}
+        </MessageList>
+      </ChatContainer>
+    </MainContainer>
+  );
+}`,
+  reactChatElements: `
+import {
+  MessageList,
+} from 'react-chat-elements';
+import 'react-chat-elements/dist/main.css';
+
+export function ReactChatElementsDemo({ messages }) {
+  return (
+    <MessageList
+      lockable
+      toBottomHeight="100%"
+      dataSource={messages}
+    />
+  );
+}`,
+  deepChatAi: `
+import { DeepChat } from 'deep-chat-react';
+
+export function DeepChatAiDemo({ history }) {
+  return (
+    <DeepChat
+      history={history}
+      textInput={{ disabled: true }}
+      chatStyle={{ height: '360px', width: '100%' }}
+    />
+  );
+}`,
+  assistantCopilot: `
+import {
+  AssistantRuntimeProvider,
+  ThreadPrimitive,
+} from '@assistant-ui/react';
+
+export function AssistantUiCopilotDemo({ runtime }) {
+  return (
+    <AssistantRuntimeProvider runtime={runtime}>
+      <ThreadPrimitive.Root>
+        <ThreadPrimitive.Viewport />
+        <ThreadPrimitive.Composer />
+      </ThreadPrimitive.Root>
+    </AssistantRuntimeProvider>
+  );
+}`,
+};
+
 export const themeOptions = [
   {
     id: 'light',
@@ -95,6 +237,22 @@ export const chatDemoCatalog = [
       'https://getstream.io/chat/docs/sdk/react/',
       'https://www.npmjs.com/package/stream-chat-react',
     ],
+    maintenance: {
+      githubUrl: 'https://github.com/GetStream/stream-chat-react',
+      license: 'SEE LICENSE IN LICENSE',
+      latestVersion: '14.1.0',
+      lastReleaseAt: '2026-05-04',
+      stars: 831,
+    },
+    integration: createIntegration({
+      rendererId: 'credential-gated',
+      mode: 'Hosted SDK source',
+      status:
+        'Requires a Stream app, user token, and channel; the gallery shows the real import source without mocking a hosted session.',
+      packageImport:
+        "import { Chat, Channel, MessageList, MessageInput } from 'stream-chat-react';",
+      sourceCode: chatDemoSources.streamTeam,
+    }),
     accent: '#0f9f8f',
     background: '#e7f6f2',
     avatar: 'ST',
@@ -149,6 +307,22 @@ export const chatDemoCatalog = [
       'https://sendbird.com/docs/chat/uikit/v3/react/overview',
       'https://www.npmjs.com/package/@sendbird/uikit-react',
     ],
+    maintenance: {
+      githubUrl: 'https://github.com/sendbird/sendbird-uikit-react',
+      license: 'SEE LICENSE IN LICENSE.md',
+      latestVersion: '3.17.12',
+      lastReleaseAt: '2026-03-26',
+      stars: 235,
+    },
+    integration: createIntegration({
+      rendererId: 'credential-gated',
+      mode: 'Hosted UIKit source',
+      status:
+        'Requires a Sendbird app ID, user ID, and channel URL; the exact React provider source is shown for credentialed trials.',
+      packageImport:
+        "import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';",
+      sourceCode: chatDemoSources.sendbirdMarketplace,
+    }),
     accent: '#6b5cff',
     background: '#eeeafd',
     avatar: 'SB',
@@ -203,6 +377,22 @@ export const chatDemoCatalog = [
       'https://www.cometchat.com/docs/ui-kit/react/overview',
       'https://www.npmjs.com/package/@cometchat/chat-uikit-react',
     ],
+    maintenance: {
+      githubUrl: 'https://github.com/cometchat/cometchat-uikit-react',
+      license: 'CometChat legal terms',
+      latestVersion: '6.4.3',
+      lastReleaseAt: '2026-04-20',
+      stars: 771,
+    },
+    integration: createIntegration({
+      rendererId: 'credential-gated',
+      mode: 'Hosted UIKit source',
+      status:
+        'Requires CometChat initialization settings; the shown source uses the published UIKit import path.',
+      packageImport:
+        "import { CometChatConversationsWithMessages } from '@cometchat/chat-uikit-react';",
+      sourceCode: chatDemoSources.cometchatSupport,
+    }),
     accent: '#ff6b4a',
     background: '#fff0eb',
     avatar: 'CC',
@@ -257,6 +447,21 @@ export const chatDemoCatalog = [
       'https://talkjs.com/docs/UI_Components/React/',
       'https://www.npmjs.com/package/@talkjs/react',
     ],
+    maintenance: {
+      githubUrl: 'https://github.com/talkjs/talkjs-react',
+      license: 'MIT',
+      latestVersion: '0.1.12',
+      lastReleaseAt: '2026-02-02',
+      stars: 16,
+    },
+    integration: createIntegration({
+      rendererId: 'credential-gated',
+      mode: 'Hosted embed source',
+      status:
+        'Requires a TalkJS app ID and conversation; the source block shows the real Session and Chatbox import path.',
+      packageImport: "import { Chatbox, Session } from '@talkjs/react';",
+      sourceCode: chatDemoSources.talkjsCommerce,
+    }),
     accent: '#006adc',
     background: '#e8f2ff',
     avatar: 'TJ',
@@ -311,6 +516,22 @@ export const chatDemoCatalog = [
       'https://chatscope.io/storybook/react/',
       'https://www.npmjs.com/package/@chatscope/chat-ui-kit-react',
     ],
+    maintenance: {
+      githubUrl: 'https://github.com/chatscope/chat-ui-kit-react',
+      license: 'MIT',
+      latestVersion: '2.1.1',
+      lastReleaseAt: '2025-05-15',
+      stars: 1745,
+    },
+    integration: createIntegration({
+      rendererId: 'chatscope',
+      mode: 'Live local package',
+      status:
+        'Rendered in this gallery through @chatscope/chat-ui-kit-react with fixture messages and the shared working composer.',
+      packageImport:
+        "import { MainContainer, ChatContainer, MessageList, Message } from '@chatscope/chat-ui-kit-react';",
+      sourceCode: chatDemoSources.chatscopeCommunity,
+    }),
     accent: '#2f855a',
     background: '#e8f5ed',
     avatar: 'CS',
@@ -365,6 +586,21 @@ export const chatDemoCatalog = [
       'https://detaysoft.github.io/docs-react-chat-elements/',
       'https://www.npmjs.com/package/react-chat-elements',
     ],
+    maintenance: {
+      githubUrl: 'https://github.com/Detaysoft/react-chat-elements',
+      license: 'MIT',
+      latestVersion: '12.0.18',
+      lastReleaseAt: '2025-03-18',
+      stars: 1387,
+    },
+    integration: createIntegration({
+      rendererId: 'react-chat-elements',
+      mode: 'Live local package',
+      status:
+        'Rendered in this gallery through react-chat-elements using real MessageList dataSource props.',
+      packageImport: "import { MessageList } from 'react-chat-elements';",
+      sourceCode: chatDemoSources.reactChatElements,
+    }),
     accent: '#805ad5',
     background: '#f1eafe',
     avatar: 'RCE',
@@ -420,6 +656,21 @@ export const chatDemoCatalog = [
       'https://deepchat.dev/docs/installation/',
       'https://www.npmjs.com/package/deep-chat-react',
     ],
+    maintenance: {
+      githubUrl: 'https://github.com/OvidijusParsiunas/deep-chat',
+      license: 'MIT',
+      latestVersion: '2.4.2',
+      lastReleaseAt: '2026-01-31',
+      stars: 3601,
+    },
+    integration: createIntegration({
+      rendererId: 'deep-chat',
+      mode: 'Live local package',
+      status:
+        'Rendered in this gallery through deep-chat-react with static history and the shared working composer.',
+      packageImport: "import { DeepChat } from 'deep-chat-react';",
+      sourceCode: chatDemoSources.deepChatAi,
+    }),
     accent: '#d53f8c',
     background: '#fdebf5',
     avatar: 'DC',
@@ -474,6 +725,22 @@ export const chatDemoCatalog = [
       'https://www.assistant-ui.com/docs',
       'https://www.npmjs.com/package/@assistant-ui/react',
     ],
+    maintenance: {
+      githubUrl: 'https://github.com/assistant-ui/assistant-ui',
+      license: 'MIT',
+      latestVersion: '0.14.0',
+      lastReleaseAt: '2026-05-07',
+      stars: 9968,
+    },
+    integration: createIntegration({
+      rendererId: 'runtime-gated',
+      mode: 'Runtime adapter source',
+      status:
+        'Requires an assistant-ui runtime adapter; the source block shows the real provider and thread primitives for runtime trials.',
+      packageImport:
+        "import { AssistantRuntimeProvider, ThreadPrimitive } from '@assistant-ui/react';",
+      sourceCode: chatDemoSources.assistantCopilot,
+    }),
     accent: '#b7791f',
     background: '#fff7df',
     avatar: 'AI',
@@ -549,6 +816,8 @@ export function listChatDemoSummaries() {
     packageName: demo.packageName,
     marketPosition: demo.marketPosition,
     audience: demo.audience,
+    integrationMode: demo.integration.mode,
+    integrationStatus: demo.integration.status,
     accent: demo.accent,
     avatar: demo.avatar,
   }));
@@ -557,12 +826,23 @@ export function listChatDemoSummaries() {
 export function getRequirementCoverage() {
   return [
     {
-      requirement: 'Render demos for researched React chat options',
-      implementation: 'chatDemoCatalog includes eight market/library profiles.',
+      requirement: 'Use real imports for React chat libraries where practical',
+      implementation:
+        'Live local adapters import ChatScope, React Chat Elements, and Deep Chat; hosted SDK source is shown with credential requirements.',
     },
     {
-      requirement: 'Provide theme and language switchers by default',
+      requirement: 'Make the input composer work and support markdown text',
+      implementation:
+        'docs/chat-demos keeps per-demo composed messages and renders markdown through react-markdown.',
+    },
+    {
+      requirement: 'Keep theme and language switchers available by default',
       implementation: 'themeOptions and languageOptions drive every snapshot.',
+    },
+    {
+      requirement: 'Show comparison metadata for every library',
+      implementation:
+        'Each catalog entry includes package version, license, GitHub stars, release date, source code, and code cost.',
     },
     {
       requirement: 'Use fake data store with Unicode string storage',
@@ -570,13 +850,13 @@ export function getRequirementCoverage() {
         'createChatDemoStore stores localized messages as code points.',
     },
     {
-      requirement: 'Document research and solution planning',
-      implementation: 'docs/case-studies/issue-1 captures data and analysis.',
+      requirement: 'Document research and solution planning for issue 3',
+      implementation: 'docs/case-studies/issue-3 captures data and analysis.',
     },
     {
-      requirement: 'Cover demos with browser tests and screenshots',
+      requirement: 'Cover input and demos with browser tests and screenshots',
       implementation:
-        'npm run test:e2e exercises all demos and writes a screenshot.',
+        'npm run test:e2e exercises every demo, sends a message, and writes a screenshot.',
     },
   ];
 }

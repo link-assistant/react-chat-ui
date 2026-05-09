@@ -14,7 +14,7 @@ const rootDir = path.resolve(
 const demoRoot = path.join(rootDir, 'docs/chat-demos');
 const defaultScreenshotPath = path.join(
   rootDir,
-  'docs/screenshots/issue-1-chat-demos.png'
+  'docs/screenshots/issue-3-chat-demos.png'
 );
 
 describe('chat demo gallery e2e', () => {
@@ -92,11 +92,15 @@ describe('chat demo gallery e2e', () => {
       const languageVisible = await commander.isVisible({
         selector: '[data-testid="language-switcher"]',
       });
+      const sourceCode = await commander.textContent({
+        selector: '[data-testid="source-code"]',
+      });
 
       assert.equal(title.trim(), demo.name);
       assert.equal(messages, demo.messages.length);
       assert.equal(themeVisible, true);
       assert.equal(languageVisible, true);
+      assert.match(sourceCode, /import/);
     }
   });
 
@@ -117,6 +121,32 @@ describe('chat demo gallery e2e', () => {
 
     assert.equal(appTheme, 'dark');
     assert.match(content, /未読|ツール結果|主なリスク/);
+  });
+
+  it('sends a composed markdown reply into the active demo', async () => {
+    await page.selectOption('[data-testid="language-switcher"]', 'en');
+    await commander.clickButton({
+      selector:
+        'button[data-testid="demo-tab"]:has-text("assistant-ui Copilot")',
+    });
+
+    const beforeCount = await commander.count({
+      selector: '[data-testid="chat-message"]',
+    });
+    await page
+      .locator('[data-testid="chat-composer-input"]')
+      .fill('**Ship it** after the screenshot passes.');
+    await page.locator('[data-testid="chat-composer-submit"]').click();
+
+    const afterCount = await commander.count({
+      selector: '[data-testid="chat-message"]',
+    });
+    const content = await commander.textContent({
+      selector: '[data-testid="message-list"]',
+    });
+
+    assert.equal(afterCount, beforeCount + 1);
+    assert.match(content, /Ship it/);
   });
 
   it('captures a screenshot for PR review', async () => {

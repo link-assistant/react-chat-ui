@@ -1,0 +1,24 @@
+{
+  "version": "6.4.3",
+  "license": "https://www.cometchat.com/legal-terms-of-service",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cometchat/cometchat-uikit-react.git#v6"
+  },
+  "homepage": "https://www.cometchat.com",
+  "time.modified": "2026-04-20T12:59:00.890Z",
+  "peerDependencies": {
+    "@types/react": ">=18.0.0 <20.0.0",
+    "@types/react-dom": ">=18.0.0 <20.0.0",
+    "rxjs": "^7.8.1"
+  },
+  "dependencies": {
+    "@cometchat/chat-sdk-javascript": "^4.1.9",
+    "@rollup/plugin-json": "^6.1.0",
+    "rxjs": "^7.8.1",
+    "react-markdown": "^10.1.0",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "react-syntax-highlighter": "^16.1.0",
+    "remark-gfm": "^4.0.1"
+  }
+}

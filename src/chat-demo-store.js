@@ -68,6 +68,8 @@ export function createChatDemoStore(options = {}) {
       packageName: demo.packageName,
       marketPosition: demo.marketPosition,
       audience: demo.audience,
+      maintenance: { ...demo.maintenance },
+      integration: { ...demo.integration },
       accent: demo.accent,
       background: demo.background,
       avatar: demo.avatar,
