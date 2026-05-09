@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0
+
+### Minor Changes
+
+- 41d1b64: Add real React chat package previews, working markdown composer, comparison metadata, and issue #3 e2e coverage.
+
 ## 0.9.0
 
 ### Minor Changes
