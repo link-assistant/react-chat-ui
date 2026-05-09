@@ -26,6 +26,7 @@ body {
 
 button,
 input,
+textarea,
 select {
   font: inherit;
 }
@@ -134,7 +135,7 @@ button {
 }
 
 .app-shell[data-theme='dark'] .toolbar select,
-.app-shell[data-theme='dark'] .composer input {
+.app-shell[data-theme='dark'] .composer textarea {
   border-color: rgba(255, 255, 255, 0.18);
   background: #0f172a;
   color: #edf2f7;
@@ -200,8 +201,21 @@ button {
   overflow-wrap: anywhere;
 }
 
+.demo-tab em {
+  display: block;
+  color: #52606d;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
 .app-shell[data-theme='dark'] .demo-tab small {
   color: #a6b3c3;
+}
+
+.app-shell[data-theme='dark'] .demo-tab em {
+  color: #cbd5e1;
 }
 
 .avatar {
@@ -219,7 +233,7 @@ button {
 
 .conversation {
   display: grid;
-  grid-template-rows: auto minmax(360px, 1fr) auto;
+  grid-template-rows: auto minmax(260px, auto) auto auto;
   background: #ffffff;
 }
 
@@ -304,8 +318,16 @@ button {
 }
 
 .message-body p {
-  margin: 8px 0;
+  margin: 0 0 8px;
   overflow-wrap: anywhere;
+}
+
+.markdown-message {
+  margin: 8px 0;
+}
+
+.markdown-message > :last-child {
+  margin-bottom: 0;
 }
 
 .message-body small {
@@ -324,8 +346,9 @@ button {
   border-top: 1px solid rgba(31, 41, 51, 0.12);
 }
 
-.composer input {
+.composer textarea {
   min-width: 0;
+  resize: vertical;
   border: 1px solid rgba(31, 41, 51, 0.18);
   border-radius: 8px;
   padding: 12px 14px;
@@ -338,6 +361,101 @@ button {
   background: var(--accent);
   color: #ffffff;
   font-weight: 800;
+}
+
+.library-preview {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+  border-top: 1px solid rgba(31, 41, 51, 0.12);
+  background: #f8fafc;
+}
+
+.app-shell[data-theme='dark'] .library-preview {
+  background: #17202e;
+}
+
+.library-preview header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.library-preview h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.library-preview p {
+  margin: 0;
+  color: #607080;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.library-preview header > span {
+  border: 1px solid rgba(31, 41, 51, 0.16);
+  border-radius: 999px;
+  padding: 5px 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.app-shell[data-theme='dark'] .library-preview p {
+  color: #cbd5e1;
+}
+
+.library-frame,
+.reference-preview {
+  min-height: 260px;
+  border: 1px solid rgba(31, 41, 51, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.chatscope-frame {
+  position: relative;
+  height: 360px;
+}
+
+.rce-frame {
+  max-height: 360px;
+  overflow: auto;
+  padding: 8px;
+}
+
+.deep-chat-frame {
+  display: grid;
+  place-items: stretch;
+  padding: 8px;
+}
+
+.reference-preview {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: 18px;
+}
+
+.reference-preview p {
+  color: #52606d;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.reference-preview code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.app-shell[data-theme='dark'] .library-frame,
+.app-shell[data-theme='dark'] .reference-preview {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #111827;
 }
 
 .detail-rail {
@@ -377,7 +495,8 @@ button {
 }
 
 .metric strong {
-  font-size: 1.2rem;
+  overflow-wrap: anywhere;
+  font-size: 1.05rem;
 }
 
 .metric span {
@@ -412,6 +531,65 @@ button {
   font-weight: 700;
 }
 
+.metadata-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.metadata-list div {
+  min-width: 0;
+}
+
+.metadata-list dt {
+  color: #607080;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.metadata-list dd {
+  margin: 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.integration-status {
+  margin: 0 0 8px;
+  color: #52606d;
+  font-size: 0.86rem;
+}
+
+.code-cost {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.code-cost span {
+  border: 1px solid rgba(31, 41, 51, 0.12);
+  border-radius: 999px;
+  padding: 4px 7px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.source-view {
+  max-height: 260px;
+  margin: 0;
+  overflow: auto;
+  border: 1px solid rgba(31, 41, 51, 0.12);
+  border-radius: 8px;
+  padding: 10px;
+  background: #101828;
+  color: #edf2f7;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  white-space: pre;
+}
+
 .detail-rail ul {
   display: grid;
   gap: 7px;
@@ -427,7 +605,9 @@ button {
 .app-shell[data-theme='contrast'] .message-body,
 .app-shell[data-theme='contrast'] .metric,
 .app-shell[data-theme='contrast'] .toolbar select,
-.app-shell[data-theme='contrast'] .composer input {
+.app-shell[data-theme='contrast'] .composer textarea,
+.app-shell[data-theme='contrast'] .library-frame,
+.app-shell[data-theme='contrast'] .reference-preview {
   border: 2px solid #111111;
 }
 

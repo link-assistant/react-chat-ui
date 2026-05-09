@@ -21,6 +21,18 @@ describe('chat demo catalog', () => {
     for (const demo of chatDemoCatalog) {
       expect(demo.packageName.length > 0).toBe(true);
       expect(demo.sourceUrls.length >= 2).toBe(true);
+      expect(demo.maintenance.githubUrl.startsWith('https://github.com/')).toBe(
+        true
+      );
+      expect(demo.maintenance.latestVersion.length > 0).toBe(true);
+      expect(demo.maintenance.license.length > 0).toBe(true);
+      expect(demo.maintenance.stars >= 0).toBe(true);
+      expect(demo.integration.packageImport.includes(demo.packageName)).toBe(
+        true
+      );
+      expect(demo.integration.sourceCode.includes('import')).toBe(true);
+      expect(demo.integration.codeLineCount > 0).toBe(true);
+      expect(demo.integration.codeSymbolCount > 0).toBe(true);
       expect(demo.featureHighlights.length >= 5).toBe(true);
       expect(demo.configurableSurfaces.length >= 4).toBe(true);
       expect(demo.designRecommendations.length >= 3).toBe(true);
@@ -37,6 +49,8 @@ describe('chat demo catalog', () => {
     expect(joined.includes('theme')).toBe(true);
     expect(joined.includes('Unicode')).toBe(true);
     expect(joined.includes('browser')).toBe(true);
+    expect(joined.includes('real imports')).toBe(true);
+    expect(joined.includes('composer')).toBe(true);
   });
 });
 
@@ -50,6 +64,8 @@ describe('chat demo store', () => {
     });
 
     expect(snapshot.id).toBe('assistant-copilot');
+    expect(snapshot.maintenance.latestVersion).toBe('0.14.0');
+    expect(snapshot.integration.codeLineCount > 0).toBe(true);
     expect(snapshot.language.id).toBe('ja');
     expect(snapshot.theme.id).toBe('contrast');
     expect(snapshot.messages.length).toBe(3);

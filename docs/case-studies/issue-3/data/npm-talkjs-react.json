@@ -1,0 +1,17 @@
+{
+  "version": "0.1.12",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talkjs/talkjs-react.git"
+  },
+  "homepage": "https://talkjs.com",
+  "time.modified": "2026-02-02T12:34:33.920Z",
+  "peerDependencies": {
+    "react": ">=17",
+    "talkjs": ">=0"
+  },
+  "dependencies": {
+    "fast-deep-equal": "^3.1.3"
+  }
+}

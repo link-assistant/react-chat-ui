@@ -17,6 +17,24 @@ export interface ChatParticipant {
   role: string;
 }
 
+export interface ChatDemoMaintenance {
+  githubUrl: string;
+  license: string;
+  latestVersion: string;
+  lastReleaseAt: string;
+  stars: number;
+}
+
+export interface ChatDemoIntegration {
+  rendererId: string;
+  mode: string;
+  status: string;
+  packageImport: string;
+  sourceCode: string;
+  codeLineCount: number;
+  codeSymbolCount: number;
+}
+
 export interface ChatMessage {
   id: string;
   authorId: string;
@@ -31,6 +49,8 @@ export interface ChatDemo {
   packageName: string;
   marketPosition: string;
   sourceUrls: string[];
+  maintenance: ChatDemoMaintenance;
+  integration: ChatDemoIntegration;
   accent: string;
   background: string;
   avatar: string;
@@ -61,6 +81,18 @@ export interface ChatDemoSnapshot extends Omit<
   language: LanguageOption;
   theme: ThemeOption;
   storage: DoubletsStoreStats;
+}
+
+export interface ChatDemoSummary {
+  id: string;
+  name: string;
+  packageName: string;
+  marketPosition: string;
+  audience: string;
+  integrationMode: string;
+  integrationStatus: string;
+  accent: string;
+  avatar: string;
 }
 
 export interface DoubletsStoreStats {
@@ -103,15 +135,7 @@ export function getRequirementCoverage(): {
   implementation: string;
 }[];
 export function getThemeOption(themeId?: string): ThemeOption;
-export function listChatDemoSummaries(): Omit<
-  ChatDemo,
-  | 'sourceUrls'
-  | 'featureHighlights'
-  | 'configurableSurfaces'
-  | 'designRecommendations'
-  | 'participants'
-  | 'messages'
->[];
+export function listChatDemoSummaries(): ChatDemoSummary[];
 
 export function createInMemoryDoubletsEngine(): object;
 export function createDoubletsUnicodeStore(options?: {
