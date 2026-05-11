@@ -750,10 +750,7 @@ export const extendedChatProfiles = [
     name: 'Vercel AI SDK (useChat)',
     packageName: 'ai',
     marketPosition: 'Streaming AI chat primitives for React/Next.js',
-    sourceUrls: [
-      'https://ai-sdk.dev',
-      'https://www.npmjs.com/package/ai',
-    ],
+    sourceUrls: ['https://ai-sdk.dev', 'https://www.npmjs.com/package/ai'],
     maintenance: {
       githubUrl: 'https://github.com/vercel/ai',
       license: 'Apache-2.0',

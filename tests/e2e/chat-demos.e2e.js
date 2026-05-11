@@ -2,7 +2,7 @@ import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { URL, fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
 import { launchBrowser, makeBrowserCommander } from 'browser-commander';
 import { chatDemoCatalog } from '../../src/index.js';
@@ -16,6 +16,155 @@ const defaultScreenshotPath = path.join(
   rootDir,
   'docs/screenshots/issue-3-chat-demos.png'
 );
+
+async function captureGalleryScreenshot({ page, screenshotPath }) {
+  mkdirSync(path.dirname(screenshotPath), { recursive: true });
+  await page.selectOption('[data-testid="theme-switcher"]', 'light');
+  await page.selectOption('[data-testid="language-switcher"]', 'ja');
+  await page.setViewportSize({ width: 1440, height: 950 });
+  await page.screenshot({ path: screenshotPath, fullPage: true });
+}
+
+async function exerciseProfilePage({ commander, page, demo, baseUrl }) {
+  const url = new URL(`profiles/${demo.id}.html`, baseUrl).href;
+  await page.goto(url, { waitUntil: 'networkidle' });
+  await commander.waitForSelector({
+    selector: '[data-testid="chat-demo-app"]',
+  });
+
+  const renderedDemoId = await page
+    .locator('[data-testid="chat-demo-app"]')
+    .getAttribute('data-demo-id');
+  const composerExists = await commander.isVisible({
+    selector: '[data-testid="chat-composer-input"]',
+  });
+  const beforeCount = await commander.count({
+    selector: '[data-testid="chat-message"]',
+  });
+
+  assert.equal(renderedDemoId, demo.id);
+  assert.equal(composerExists, true);
+
+  await page
+    .locator('[data-testid="chat-composer-input"]')
+    .fill(`mf send for ${demo.id}`);
+  await page.locator('[data-testid="chat-composer-submit"]').click();
+
+  const afterCount = await commander.count({
+    selector: '[data-testid="chat-message"]',
+  });
+  const transcript = await commander.textContent({
+    selector: '[data-testid="message-list"]',
+  });
+  assert.equal(afterCount, beforeCount + 1);
+  assert.match(transcript, new RegExp(`mf send for ${demo.id}`));
+}
+
+async function selectDemoTab({ page, demoId }) {
+  await page.locator(`button[data-demo-id="${demoId}"]`).click();
+}
+
+async function exerciseToggles({ commander, page }) {
+  await selectDemoTab({ page, demoId: 'link-assistant-own' });
+
+  const before = await commander.count({
+    selector: '[data-testid="message-list"] .avatar',
+  });
+
+  await page.locator('[data-testid="toggle-showAvatar"]').click();
+  await page.locator('[data-testid="toggle-showSenderName"]').click();
+
+  const afterAvatars = await commander.count({
+    selector: '[data-testid="message-list"] .avatar',
+  });
+  const senderNames = await commander.count({
+    selector: '[data-testid="chat-message-author"]',
+  });
+  const replyVisible = await commander.isVisible({
+    selector: '[data-testid="chat-message-reply"]',
+  });
+
+  assert.equal(afterAvatars, 0);
+  assert.equal(senderNames, 0);
+  assert.equal(
+    replyVisible,
+    true,
+    'Reply chrome should still render when showReplies is on'
+  );
+
+  await page.locator('[data-testid="toggle-showAvatar"]').click();
+  await page.locator('[data-testid="toggle-showSenderName"]').click();
+
+  const restored = await commander.count({
+    selector: '[data-testid="message-list"] .avatar',
+  });
+
+  assert.equal(restored, before);
+}
+
+async function exerciseLocale({ commander, page }) {
+  await page.selectOption('[data-testid="theme-switcher"]', 'dark');
+  await page.selectOption('[data-testid="language-switcher"]', 'ja');
+  await selectDemoTab({ page, demoId: 'assistant-copilot' });
+  const appTheme = await page.locator('.app-shell').getAttribute('data-theme');
+  const content = await commander.textContent({
+    selector: '[data-testid="message-list"]',
+  });
+  assert.equal(appTheme, 'dark');
+  assert.match(content, /未読|ツール結果|主なリスク/);
+}
+
+async function verifyComposerKind({ page, kind, expectedTag }) {
+  await page.selectOption('[data-testid="composer-kind"]', kind);
+  const tag = await page
+    .locator('[data-testid="chat-composer-input"]')
+    .evaluate((node) => node.tagName);
+  assert.equal(tag, expectedTag);
+}
+
+async function exerciseDemo({ commander, page, demo }) {
+  await selectDemoTab({ page, demoId: demo.id });
+  const title = await commander.textContent({
+    selector: '.conversation-header h1',
+  });
+  const beforeMessages = await commander.count({
+    selector: '[data-testid="chat-message"]',
+  });
+  const themeVisible = await commander.isVisible({
+    selector: '[data-testid="theme-switcher"]',
+  });
+  const languageVisible = await commander.isVisible({
+    selector: '[data-testid="language-switcher"]',
+  });
+  const sourceCode = await commander.textContent({
+    selector: '[data-testid="source-code"]',
+  });
+
+  assert.equal(title.trim(), demo.name);
+  assert.equal(beforeMessages, demo.messages.length);
+  assert.equal(themeVisible, true);
+  assert.equal(languageVisible, true);
+  assert.match(sourceCode, /import/);
+
+  const probe = `e2e ${demo.id} **markdown** check`;
+  await page.locator('[data-testid="chat-composer-input"]').fill('');
+  await page.locator('[data-testid="chat-composer-input"]').fill(probe);
+  await page.locator('[data-testid="chat-composer-submit"]').click();
+
+  const afterMessages = await commander.count({
+    selector: '[data-testid="chat-message"]',
+  });
+  const transcript = await commander.textContent({
+    selector: '[data-testid="message-list"]',
+  });
+
+  assert.equal(
+    afterMessages,
+    beforeMessages + 1,
+    `expected one new message for ${demo.id}`
+  );
+  assert.match(transcript, /markdown check/);
+}
 
 describe('chat demo gallery e2e', () => {
   let viteServer;
@@ -75,60 +224,28 @@ describe('chat demo gallery e2e', () => {
     assert.equal(renderedDemos, chatDemoCatalog.length);
   });
 
-  it('opens every demo with messages and default switchers', async () => {
-    for (const demo of chatDemoCatalog) {
-      await commander.clickButton({
-        selector: `button[data-testid="demo-tab"]:has-text("${demo.name}")`,
-      });
-      const title = await commander.textContent({
-        selector: '.conversation-header h1',
-      });
-      const messages = await commander.count({
-        selector: '[data-testid="chat-message"]',
-      });
-      const themeVisible = await commander.isVisible({
-        selector: '[data-testid="theme-switcher"]',
-      });
-      const languageVisible = await commander.isVisible({
-        selector: '[data-testid="language-switcher"]',
-      });
-      const sourceCode = await commander.textContent({
-        selector: '[data-testid="source-code"]',
-      });
+  it('pins our own chat profile as the first entry', async () => {
+    const firstTabText = await page
+      .locator('button[data-testid="demo-tab"]')
+      .first()
+      .textContent();
 
-      assert.equal(title.trim(), demo.name);
-      assert.equal(messages, demo.messages.length);
-      assert.equal(themeVisible, true);
-      assert.equal(languageVisible, true);
-      assert.match(sourceCode, /import/);
+    assert.match(firstTabText, /Our own chat UI/);
+  });
+
+  it('opens every demo with visible messages, switchers, and a working send', async () => {
+    for (const demo of chatDemoCatalog) {
+      await exerciseDemo({ commander, page, demo });
     }
   });
 
   it('switches theme and language without losing Unicode messages', async () => {
-    await page.selectOption('[data-testid="theme-switcher"]', 'dark');
-    await page.selectOption('[data-testid="language-switcher"]', 'ja');
-    await commander.clickButton({
-      selector:
-        'button[data-testid="demo-tab"]:has-text("assistant-ui Copilot")',
-    });
-
-    const appTheme = await page
-      .locator('.app-shell')
-      .getAttribute('data-theme');
-    const content = await commander.textContent({
-      selector: '[data-testid="message-list"]',
-    });
-
-    assert.equal(appTheme, 'dark');
-    assert.match(content, /未読|ツール結果|主なリスク/);
+    await exerciseLocale({ commander, page });
   });
 
   it('sends a composed markdown reply into the active demo', async () => {
     await page.selectOption('[data-testid="language-switcher"]', 'en');
-    await commander.clickButton({
-      selector:
-        'button[data-testid="demo-tab"]:has-text("assistant-ui Copilot")',
-    });
+    await selectDemoTab({ page, demoId: 'assistant-copilot' });
 
     const beforeCount = await commander.count({
       selector: '[data-testid="chat-message"]',
@@ -149,16 +266,63 @@ describe('chat demo gallery e2e', () => {
     assert.match(content, /Ship it/);
   });
 
+  it('toggles avatars, sender name, timestamps, and reply chrome', async () => {
+    await exerciseToggles({ commander, page });
+  });
+
+  it('switches the composer kind between textarea, input, and contenteditable', async () => {
+    await selectDemoTab({ page, demoId: 'link-assistant-own' });
+    await verifyComposerKind({ page, kind: 'input', expectedTag: 'INPUT' });
+    await verifyComposerKind({
+      page,
+      kind: 'contenteditable',
+      expectedTag: 'DIV',
+    });
+    await verifyComposerKind({
+      page,
+      kind: 'textarea',
+      expectedTag: 'TEXTAREA',
+    });
+  });
+
+  it('opens the comparison view with one row per profile', async () => {
+    await page.locator('[data-testid="view-tab-compare"]').click();
+    await commander.waitForSelector({
+      selector: '[data-testid="compare-view"]',
+    });
+
+    const rowCount = await commander.count({
+      selector: '[data-testid="compare-row"]',
+    });
+    const compareText = await commander.textContent({
+      selector: '[data-testid="compare-view"]',
+    });
+
+    assert.equal(rowCount, chatDemoCatalog.length);
+    assert.match(compareText, /Limitations|Lock-ins|License/);
+
+    await page.locator('[data-testid="view-tab-demo"]').click();
+    await commander.waitForSelector({
+      selector: '[data-testid="message-list"]',
+    });
+  });
+
+  it('opens isolated micro-frontend pages for every profile', async () => {
+    for (const demo of chatDemoCatalog) {
+      await exerciseProfilePage({ commander, page, demo, baseUrl });
+    }
+
+    await page.goto(baseUrl, { waitUntil: 'networkidle' });
+    await commander.waitForSelector({
+      selector: '[data-testid="chat-demo-app"]',
+    });
+  });
+
   it('captures a screenshot for PR review', async () => {
     const screenshotPath =
       process.env.CHAT_DEMO_SCREENSHOT_PATH ?? defaultScreenshotPath;
 
-    mkdirSync(path.dirname(screenshotPath), { recursive: true });
-    await page.selectOption('[data-testid="theme-switcher"]', 'light');
-    await page.selectOption('[data-testid="language-switcher"]', 'ja');
-    await page.setViewportSize({ width: 1440, height: 950 });
-    await page.screenshot({ path: screenshotPath, fullPage: true });
-
+    await captureGalleryScreenshot({ page, screenshotPath });
     assert.equal(typeof screenshotPath, 'string');
   });
 });

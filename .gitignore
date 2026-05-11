@@ -140,3 +140,10 @@ vite.config.ts.timestamp-*
 
 # jscpd reports
 reports/
+
+# Auto-generated chat demo micro-frontend pages
+docs/chat-demos/profiles/
+
+# Ad-hoc experiments
+experiments/
+

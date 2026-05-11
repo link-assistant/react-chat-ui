@@ -13,10 +13,24 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import 'react-chat-elements/dist/main.css';
 import {
   createChatDemoStore,
+  getComparisonMatrix,
   languageOptions,
   themeOptions,
 } from '../../../src/index.js';
 import './styles.css';
+
+const FEATURE_TOGGLES = [
+  { id: 'showAvatar', label: 'Avatars', defaultValue: true },
+  { id: 'showSenderName', label: 'Sender name', defaultValue: true },
+  { id: 'showTimestamp', label: 'Timestamps', defaultValue: true },
+  { id: 'showReplies', label: 'Replies', defaultValue: true },
+];
+
+const COMPOSER_KINDS = [
+  { id: 'textarea', label: 'Textarea (markdown)' },
+  { id: 'contenteditable', label: 'ContentEditable' },
+  { id: 'input', label: 'Single-line input' },
+];
 
 const store = createChatDemoStore();
 const localParticipant = {
@@ -78,29 +92,74 @@ function DemoNavigation({ demos, selectedDemoId, onSelect }) {
   return (
     <nav className="demo-nav" aria-label="Chat demos">
       {demos.map((demo) => (
-        <button
+        <div
           key={demo.id}
-          className="demo-tab"
-          data-testid="demo-tab"
-          aria-pressed={demo.id === selectedDemoId}
-          onClick={() => onSelect(demo.id)}
-          type="button"
+          className={`demo-tab-row ${demo.isOwn ? 'is-own' : ''}`}
         >
-          <Avatar label={demo.avatar} accent={demo.accent} />
-          <span>
-            <strong>{demo.name}</strong>
-            <small>{demo.packageName}</small>
-            <em>{demo.integrationMode}</em>
-          </span>
-        </button>
+          <button
+            className="demo-tab"
+            data-testid="demo-tab"
+            data-demo-id={demo.id}
+            aria-pressed={demo.id === selectedDemoId}
+            onClick={() => onSelect(demo.id)}
+            type="button"
+          >
+            <Avatar label={demo.avatar} accent={demo.accent} />
+            <span>
+              <strong>{demo.name}</strong>
+              <small>{demo.packageName}</small>
+              <em>{demo.integrationMode}</em>
+            </span>
+          </button>
+          <a
+            className="demo-open"
+            data-testid="demo-open-link"
+            href={`./profiles/${demo.id}.html`}
+            title="Open isolated micro-frontend"
+          >
+            Open
+          </a>
+        </div>
       ))}
     </nav>
   );
 }
 
-function Toolbar({ languageId, setLanguageId, themeId, setThemeId, strings }) {
+function Toolbar({
+  languageId,
+  setLanguageId,
+  themeId,
+  setThemeId,
+  strings,
+  toggles,
+  setToggles,
+  composerKind,
+  setComposerKind,
+  view,
+  setView,
+}) {
   return (
     <div className="toolbar" data-testid="demo-toolbar">
+      <div className="toolbar-tabs" role="tablist">
+        <button
+          type="button"
+          data-testid="view-tab-demo"
+          role="tab"
+          aria-selected={view === 'demo'}
+          onClick={() => setView('demo')}
+        >
+          Demo
+        </button>
+        <button
+          type="button"
+          data-testid="view-tab-compare"
+          role="tab"
+          aria-selected={view === 'compare'}
+          onClick={() => setView('compare')}
+        >
+          Compare
+        </button>
+      </div>
       <label>
         <span>{strings.theme}</span>
         <select
@@ -129,6 +188,38 @@ function Toolbar({ languageId, setLanguageId, themeId, setThemeId, strings }) {
           ))}
         </select>
       </label>
+      <label>
+        <span>Composer</span>
+        <select
+          data-testid="composer-kind"
+          value={composerKind}
+          onChange={(event) => setComposerKind(event.target.value)}
+        >
+          {COMPOSER_KINDS.map((kind) => (
+            <option key={kind.id} value={kind.id}>
+              {kind.label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <div className="toggle-group" role="group" aria-label="Chrome toggles">
+        {FEATURE_TOGGLES.map((toggle) => (
+          <label key={toggle.id} className="toggle">
+            <input
+              type="checkbox"
+              data-testid={`toggle-${toggle.id}`}
+              checked={Boolean(toggles[toggle.id])}
+              onChange={(event) =>
+                setToggles((current) => ({
+                  ...current,
+                  [toggle.id]: event.target.checked,
+                }))
+              }
+            />
+            <span>{toggle.label}</span>
+          </label>
+        ))}
+      </div>
     </div>
   );
 }
@@ -141,10 +232,14 @@ function MarkdownMessage({ text }) {
   );
 }
 
-function Transcript({ snapshot, messages, participants }) {
+function Transcript({ snapshot, messages, participants, toggles }) {
   const participantMap = useMemo(
     () => createParticipantMap(participants),
     [participants]
+  );
+  const messageMap = useMemo(
+    () => new Map(messages.map((message) => [message.id, message])),
+    [messages]
   );
 
   return (
@@ -152,6 +247,13 @@ function Transcript({ snapshot, messages, participants }) {
       {messages.map((message) => {
         const author = participantMap.get(message.authorId);
         const isSystem = author?.role === 'System' || author?.role === 'Tool';
+        const replyTarget =
+          toggles.showReplies && message.replyToId
+            ? messageMap.get(message.replyToId)
+            : null;
+        const replyAuthor = replyTarget
+          ? participantMap.get(replyTarget.authorId)
+          : null;
 
         return (
           <article
@@ -159,20 +261,45 @@ function Transcript({ snapshot, messages, participants }) {
             data-testid="chat-message"
             key={message.id}
           >
-            <Avatar
-              label={(author?.name ?? 'User')
-                .split(' ')
-                .map((part) => part[0])
-                .join('')
-                .slice(0, 2)}
-              accent={snapshot.accent}
-            />
+            {toggles.showAvatar ? (
+              <Avatar
+                label={(author?.name ?? 'User')
+                  .split(' ')
+                  .map((part) => part[0])
+                  .join('')
+                  .slice(0, 2)}
+                accent={snapshot.accent}
+              />
+            ) : (
+              <span aria-hidden="true" />
+            )}
             <div className="message-body">
-              <div className="message-meta">
-                <strong>{author?.name ?? 'Unknown'}</strong>
-                <span>{author?.role ?? 'Participant'}</span>
-                <time>{message.sentAt}</time>
-              </div>
+              {(toggles.showSenderName || toggles.showTimestamp) && (
+                <div className="message-meta">
+                  {toggles.showSenderName && (
+                    <>
+                      <strong data-testid="chat-message-author">
+                        {author?.name ?? 'Unknown'}
+                      </strong>
+                      <span>{author?.role ?? 'Participant'}</span>
+                    </>
+                  )}
+                  {toggles.showTimestamp && (
+                    <time data-testid="chat-message-time">
+                      {message.sentAt}
+                    </time>
+                  )}
+                </div>
+              )}
+              {replyTarget && (
+                <blockquote
+                  className="reply-quote"
+                  data-testid="chat-message-reply"
+                >
+                  <strong>{replyAuthor?.name ?? 'Participant'}</strong>
+                  <span>{stripMarkdown(replyTarget.text).slice(0, 80)}</span>
+                </blockquote>
+              )}
               <MarkdownMessage text={message.text} />
               <small>
                 #{message.storageId} / {message.codePointCount} code points
@@ -185,12 +312,12 @@ function Transcript({ snapshot, messages, participants }) {
   );
 }
 
-function Composer({ placeholder, onSend }) {
+function Composer({ placeholder, onSend, composerKind }) {
   const [value, setValue] = useState('');
+  const editableRef = useRef(null);
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const trimmed = value.trim();
+  function submit(rawText) {
+    const trimmed = rawText.trim();
 
     if (!trimmed) {
       return;
@@ -198,18 +325,63 @@ function Composer({ placeholder, onSend }) {
 
     onSend(trimmed);
     setValue('');
+
+    if (editableRef.current) {
+      editableRef.current.textContent = '';
+    }
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    if (composerKind === 'contenteditable') {
+      submit(editableRef.current?.textContent ?? '');
+      return;
+    }
+
+    submit(value);
   }
 
   return (
-    <form className="composer" onSubmit={handleSubmit}>
-      <textarea
-        aria-label={placeholder}
-        data-testid="chat-composer-input"
-        placeholder={placeholder}
-        rows={2}
-        value={value}
-        onChange={(event) => setValue(event.target.value)}
-      />
+    <form
+      className={`composer composer-${composerKind}`}
+      data-testid="chat-composer"
+      data-composer-kind={composerKind}
+      onSubmit={handleSubmit}
+    >
+      {composerKind === 'textarea' && (
+        <textarea
+          aria-label={placeholder}
+          data-testid="chat-composer-input"
+          placeholder={placeholder}
+          rows={2}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+        />
+      )}
+      {composerKind === 'input' && (
+        <input
+          type="text"
+          aria-label={placeholder}
+          data-testid="chat-composer-input"
+          placeholder={placeholder}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+        />
+      )}
+      {composerKind === 'contenteditable' && (
+        <div
+          aria-label={placeholder}
+          className="composer-contenteditable"
+          contentEditable
+          data-placeholder={placeholder}
+          data-testid="chat-composer-input"
+          ref={editableRef}
+          role="textbox"
+          suppressContentEditableWarning
+          onInput={(event) => setValue(event.currentTarget.textContent ?? '')}
+        />
+      )}
       <button data-testid="chat-composer-submit" type="submit">
         Send
       </button>
@@ -313,7 +485,51 @@ function ReferencePreview({ snapshot }) {
   );
 }
 
-function LibraryRenderer({ snapshot, messages, participants }) {
+function OwnChatPreview({ snapshot, messages, participants, toggles }) {
+  const participantMap = useMemo(
+    () => createParticipantMap(participants),
+    [participants]
+  );
+
+  return (
+    <div className="library-frame own-chat-frame" data-testid="own-chat-frame">
+      <ul className="own-chat-list">
+        {messages.map((message) => {
+          const author = participantMap.get(message.authorId);
+          const isLocal = message.authorId === localParticipant.id;
+
+          return (
+            <li
+              key={message.id}
+              className={`own-chat-message ${isLocal ? 'is-local' : ''}`}
+              data-testid="own-chat-message"
+            >
+              {toggles.showAvatar && (
+                <span
+                  className="own-chat-avatar"
+                  style={{ background: snapshot.accent }}
+                >
+                  {(author?.name ?? '?').slice(0, 2)}
+                </span>
+              )}
+              <div className="own-chat-body">
+                {toggles.showSenderName && (
+                  <strong>{author?.name ?? 'Participant'}</strong>
+                )}
+                <ReactMarkdown>{message.text}</ReactMarkdown>
+                {toggles.showTimestamp && (
+                  <time className="own-chat-time">{message.sentAt}</time>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function LibraryRenderer({ snapshot, messages, participants, toggles }) {
   switch (snapshot.integration.rendererId) {
     case 'chatscope':
       return (
@@ -328,12 +544,27 @@ function LibraryRenderer({ snapshot, messages, participants }) {
       );
     case 'deep-chat':
       return <DeepChatPreview messages={messages} />;
+    case 'own-chat':
+      return (
+        <OwnChatPreview
+          snapshot={snapshot}
+          messages={messages}
+          participants={participants}
+          toggles={toggles}
+        />
+      );
     default:
       return <ReferencePreview snapshot={snapshot} />;
   }
 }
 
-function LibraryPreview({ snapshot, messages, participants, onMetricsChange }) {
+function LibraryPreview({
+  snapshot,
+  messages,
+  participants,
+  toggles,
+  onMetricsChange,
+}) {
   const frameRef = useRef(null);
 
   function handleRender(id, phase, actualDuration) {
@@ -361,6 +592,7 @@ function LibraryPreview({ snapshot, messages, participants, onMetricsChange }) {
           snapshot={snapshot}
           messages={messages}
           participants={participants}
+          toggles={toggles}
         />
       </Profiler>
     </section>
@@ -371,6 +603,8 @@ function MessageList({
   snapshot,
   messages,
   participants,
+  toggles,
+  composerKind,
   onSend,
   onMetricsChange,
 }) {
@@ -387,17 +621,101 @@ function MessageList({
         snapshot={snapshot}
         messages={messages}
         participants={participants}
+        toggles={toggles}
       />
       <LibraryPreview
         snapshot={snapshot}
         messages={messages}
         participants={participants}
+        toggles={toggles}
         onMetricsChange={onMetricsChange}
       />
       <Composer
+        composerKind={composerKind}
         placeholder={snapshot.language.strings.messagePlaceholder}
         onSend={onSend}
       />
+    </section>
+  );
+}
+
+const COMPARE_FEATURE_COLUMNS = [
+  { id: 'avatar', label: 'Avatar' },
+  { id: 'senderName', label: 'Sender name' },
+  { id: 'timestamp', label: 'Timestamp' },
+  { id: 'reply', label: 'Replies' },
+  { id: 'markdownMessages', label: 'Markdown msg' },
+  { id: 'markdownComposer', label: 'Markdown composer' },
+  { id: 'threads', label: 'Threads' },
+  { id: 'typing', label: 'Typing' },
+  { id: 'reactions', label: 'Reactions' },
+  { id: 'fileAttachments', label: 'File attach' },
+  { id: 'aiStreaming', label: 'AI streaming' },
+  { id: 'moderation', label: 'Moderation' },
+];
+
+function CompareView({ rows }) {
+  return (
+    <section className="compare-view" data-testid="compare-view">
+      <header className="compare-header">
+        <h2>Feature, limitation, and lock-in matrix</h2>
+        <p>
+          {rows.length} profiles ranked by computed score. Higher means richer
+          features, better maintenance, and more configurable surfaces.
+        </p>
+      </header>
+      <div className="compare-table-wrap">
+        <table className="compare-table">
+          <thead>
+            <tr>
+              <th>Profile</th>
+              <th>Score</th>
+              <th>License</th>
+              <th>Stars</th>
+              <th>Released</th>
+              {COMPARE_FEATURE_COLUMNS.map((column) => (
+                <th key={column.id}>{column.label}</th>
+              ))}
+              <th>Limitations</th>
+              <th>Lock-ins</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id} data-testid="compare-row">
+                <th scope="row">
+                  <strong>{row.name}</strong>
+                  <small>{row.packageName}</small>
+                  <em>{row.integrationMode}</em>
+                </th>
+                <td>{row.score.total.toFixed(1)}</td>
+                <td>{row.license}</td>
+                <td>{formatStars(row.stars)}</td>
+                <td>{row.lastReleaseAt}</td>
+                {COMPARE_FEATURE_COLUMNS.map((column) => (
+                  <td key={column.id} aria-label={column.label}>
+                    {row.featureMatrix[column.id] ? 'Yes' : 'No'}
+                  </td>
+                ))}
+                <td>
+                  <ul>
+                    {row.limitations.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    {row.lockIns.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
@@ -490,6 +808,13 @@ function DetailRail({ snapshot, messages, participants, renderMetrics }) {
   );
 }
 
+function getInitialToggles() {
+  return FEATURE_TOGGLES.reduce(
+    (current, toggle) => ({ ...current, [toggle.id]: toggle.defaultValue }),
+    {}
+  );
+}
+
 function App() {
   const demos = store.listDemos();
   const [selectedDemoId, setSelectedDemoId] = useState(demos[0].id);
@@ -497,6 +822,9 @@ function App() {
   const [themeId, setThemeId] = useState(themeOptions[0].id);
   const [composedMessages, setComposedMessages] = useState({});
   const [renderMetrics, setRenderMetrics] = useState({});
+  const [toggles, setToggles] = useState(getInitialToggles);
+  const [composerKind, setComposerKind] = useState(COMPOSER_KINDS[0].id);
+  const [view, setView] = useState('demo');
   const snapshot = store.getDemoSnapshot({
     demoId: selectedDemoId,
     languageId,
@@ -510,6 +838,7 @@ function App() {
     () => [...snapshot.messages, ...(composedMessages[selectedDemoId] ?? [])],
     [composedMessages, selectedDemoId, snapshot.messages]
   );
+  const compareRows = useMemo(() => getComparisonMatrix(), []);
 
   function handleSend(text) {
     setComposedMessages((current) => {
@@ -523,6 +852,7 @@ function App() {
         text,
         storageId: `local-${nextIndex}`,
         codePointCount: Array.from(text).length,
+        replyToId: snapshot.messages.at(-1)?.id ?? null,
       };
 
       return {
@@ -543,45 +873,62 @@ function App() {
     <main
       className="app-shell"
       data-theme={themeId}
+      data-view={view}
       style={{
         '--accent': snapshot.accent,
         '--demo-background': snapshot.background,
       }}
     >
-      <section className="workspace" data-testid="chat-demo-app">
+      <section
+        className="workspace"
+        data-testid="chat-demo-app"
+        data-demo-id={selectedDemoId}
+      >
         <header className="workspace-header">
           <div>
             <p>React chat UI</p>
             <h1>Comparison lab</h1>
           </div>
           <Toolbar
+            composerKind={composerKind}
             languageId={languageId}
+            setComposerKind={setComposerKind}
             setLanguageId={setLanguageId}
-            themeId={themeId}
             setThemeId={setThemeId}
+            setToggles={setToggles}
+            setView={setView}
             strings={snapshot.language.strings}
+            themeId={themeId}
+            toggles={toggles}
+            view={view}
           />
         </header>
-        <div className="workspace-grid">
-          <DemoNavigation
-            demos={demos}
-            selectedDemoId={selectedDemoId}
-            onSelect={setSelectedDemoId}
-          />
-          <MessageList
-            snapshot={snapshot}
-            messages={messages}
-            participants={participants}
-            onSend={handleSend}
-            onMetricsChange={handleMetricsChange}
-          />
-          <DetailRail
-            snapshot={snapshot}
-            messages={messages}
-            participants={participants}
-            renderMetrics={renderMetrics[selectedDemoId] ?? {}}
-          />
-        </div>
+        {view === 'demo' ? (
+          <div className="workspace-grid">
+            <DemoNavigation
+              demos={demos}
+              selectedDemoId={selectedDemoId}
+              onSelect={setSelectedDemoId}
+            />
+            <MessageList
+              composerKind={composerKind}
+              messages={messages}
+              participants={participants}
+              snapshot={snapshot}
+              toggles={toggles}
+              onMetricsChange={handleMetricsChange}
+              onSend={handleSend}
+            />
+            <DetailRail
+              messages={messages}
+              participants={participants}
+              renderMetrics={renderMetrics[selectedDemoId] ?? {}}
+              snapshot={snapshot}
+            />
+          </div>
+        ) : (
+          <CompareView rows={compareRows} />
+        )}
       </section>
     </main>
   );

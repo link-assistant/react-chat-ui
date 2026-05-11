@@ -19,7 +19,10 @@ function recencyScore(lastReleaseAt, nowMs) {
   if (released === 0) {
     return 0;
   }
-  const ageMonths = Math.max(0, (nowMs - released) / (1000 * 60 * 60 * 24 * 30));
+  const ageMonths = Math.max(
+    0,
+    (nowMs - released) / (1000 * 60 * 60 * 24 * 30)
+  );
   const decay = Math.max(0, 1 - ageMonths / 24);
   return Math.round(decay * WEIGHTS.recencyMax);
 }
