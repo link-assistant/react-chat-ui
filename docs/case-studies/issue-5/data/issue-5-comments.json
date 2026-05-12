@@ -1,1 +1,48 @@
-[]
+[
+  {
+    "url": "https://api.github.com/repos/link-assistant/react-chat-ui/issues/comments/4432168514",
+    "html_url": "https://github.com/link-assistant/react-chat-ui/issues/5#issuecomment-4432168514",
+    "issue_url": "https://api.github.com/repos/link-assistant/react-chat-ui/issues/5",
+    "id": 4432168514,
+    "node_id": "IC_kwDOSXiEPM8AAAABCC2GQg",
+    "user": {
+      "login": "konard",
+      "id": 1431904,
+      "node_id": "MDQ6VXNlcjE0MzE5MDQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1431904?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/konard",
+      "html_url": "https://github.com/konard",
+      "followers_url": "https://api.github.com/users/konard/followers",
+      "following_url": "https://api.github.com/users/konard/following{/other_user}",
+      "gists_url": "https://api.github.com/users/konard/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/konard/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/konard/subscriptions",
+      "organizations_url": "https://api.github.com/users/konard/orgs",
+      "repos_url": "https://api.github.com/users/konard/repos",
+      "events_url": "https://api.github.com/users/konard/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/konard/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "created_at": "2026-05-12T15:32:22Z",
+    "updated_at": "2026-05-12T15:32:22Z",
+    "body": "<img width=\"1824\" height=\"1098\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/9bedd008-ffa3-4965-9c49-8858df678473\" />\n\n<img width=\"1824\" height=\"1098\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/fb014c8c-d693-4e7c-aec8-806d290f8844\" />\n\nIt is still visible, that we still duplicate our own chat rendering in all pages, that distracts from actual demos. And most of demos still does not work, I asked to have e2e tests, and looks like these were not done, or they just not working.\n\nPlease double check all my requirements again, and fix all the errors. All demos should be working, we should not have so much white space on the page in the middle, where we have demos, also we now have separate section for our own chat implementation, there is no need to show it on every page duplicating.\n\nAlso I was talking about sorting and so on, nothing of these is done.",
+    "author_association": "MEMBER",
+    "pin": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/link-assistant/react-chat-ui/issues/comments/4432168514/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "performed_via_github_app": null
+  }
+]

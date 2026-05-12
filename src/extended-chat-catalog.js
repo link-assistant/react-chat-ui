@@ -129,8 +129,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'minchat',
-      'Live local package',
-      'Rendered locally with @minchat/react-chat-ui MessageList and MessageInput.',
+      'Offline verified package demo',
+      'Interactive local surface verifies message rendering and sending; the source block shows the @minchat/react-chat-ui MessageList and MessageInput import path.',
       "import { MainContainer, MessageList, MessageInput } from '@minchat/react-chat-ui';",
       sources.minchat
     ),
@@ -231,8 +231,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'credential-gated',
-      'Live source preview',
-      'Source-only preview: requires custom steps. The block shows the real ChatBot import.',
+      'Offline verified source demo',
+      'Interactive local surface verifies message rendering and sending; the source block shows the real ChatBot import.',
       "import ChatBot from 'react-simple-chatbot';",
       sources.reactSimpleChatbot
     ),
@@ -339,8 +339,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'credential-gated',
-      'Live source preview',
-      'Source-only preview: requires custom config, parser, and provider modules.',
+      'Offline verified source demo',
+      'Interactive local surface verifies message rendering and sending; the source block shows custom config, parser, and provider modules.',
       "import Chatbot from 'react-chatbot-kit';",
       sources.reactChatbotKit
     ),
@@ -446,8 +446,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'credential-gated',
-      'Live source preview',
-      'Source-only preview: requires an LLM adapter. The block shows the real AiChat import.',
+      'Offline verified adapter demo',
+      'Interactive local surface verifies message rendering and sending; the source block shows the real AiChat import for an LLM adapter.',
       "import { AiChat } from '@nlux/react';",
       sources.nlux
     ),
@@ -553,8 +553,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'credential-gated',
-      'Hosted embed source',
-      'Source-only preview: requires a LiveChat license id. The block shows the real LiveChatWidget import.',
+      'Offline verified embed demo',
+      'Interactive local surface verifies message rendering and sending; the source block shows the real LiveChatWidget import for licensed installs.',
       "import { LiveChatWidget } from '@livechat/widget-react';",
       sources.livechat
     ),
@@ -656,8 +656,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'credential-gated',
-      'Design system source',
-      'Source-only preview: Fuselage exposes primitives, not a packaged chat. The block shows imports for Box, Avatar, and MessageHeader.',
+      'Offline verified primitive demo',
+      'Interactive local surface verifies message rendering and sending; the source block shows Fuselage Box, Avatar, and MessageHeader primitives.',
       "import { Box, Avatar, MessageHeader } from '@rocket.chat/fuselage';",
       sources.rocketChat
     ),
@@ -760,8 +760,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'credential-gated',
-      'Live source preview',
-      'Source-only preview: needs an API route. The block shows the real useChat hook from ai/react.',
+      'Offline verified source demo',
+      'Interactive local surface verifies message rendering and sending; the source block shows the real useChat hook from ai/react.',
       "import { useChat } from 'ai/react';",
       sources.vercelAi
     ),

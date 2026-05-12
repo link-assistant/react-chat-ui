@@ -1,0 +1,20 @@
+{
+  "author": {
+    "id": "MDQ6VXNlcjE0MzE5MDQ=",
+    "is_bot": false,
+    "login": "konard",
+    "name": "Konstantin Diachenko"
+  },
+  "baseRefName": "main",
+  "body": "Fixes #5.\n\n## Summary\n\n- Removed the duplicated custom transcript from the gallery and isolated profile pages; each profile now renders one active `DemoSurface`.\n- Added shared real/adapter demo surfaces so every profile verifies visible fixture messages and sent messages in the selected surface.\n- Split the nav into the pinned own component and ranked external libraries with score chips, and corrected scoring so only actual live local renderers get the live bonus.\n- Refreshed the issue-5 case-study data, saved the reported screenshots, and added the final review screenshot.\n\n## Verification\n\n- `npm test`\n- `npm run demo:build`\n- `npm run test:e2e`\n- `npm run check`\n- Playwright MCP manual check: assistant-ui external profile reported one `demo-surface`, zero `.own-chat-frame` nodes, and `runtime-gated` renderer.\n\n## Screenshot\n\n![Issue 5 chat demos](https://github.com/link-assistant/react-chat-ui/blob/issue-5-e1b0937faaf7/docs/screenshots/issue-5-chat-demos.png?raw=true)\n",
+  "createdAt": "2026-05-12T15:33:08Z",
+  "headRefName": "issue-5-e1b0937faaf7",
+  "isDraft": false,
+  "mergeStateStatus": "UNSTABLE",
+  "number": 7,
+  "reviewDecision": "",
+  "state": "OPEN",
+  "title": "Fix duplicate chat demo surfaces",
+  "updatedAt": "2026-05-12T16:27:03Z",
+  "url": "https://github.com/link-assistant/react-chat-ui/pull/7"
+}

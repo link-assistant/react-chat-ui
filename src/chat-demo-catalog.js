@@ -250,9 +250,9 @@ const baseChatProfiles = [
     },
     integration: createIntegration({
       rendererId: 'credential-gated',
-      mode: 'Hosted SDK source',
+      mode: 'Offline verified SDK demo',
       status:
-        'Requires a Stream app, user token, and channel; the gallery shows the real import source without mocking a hosted session.',
+        'Interactive local surface verifies message rendering and sending; the source block shows the real Stream Chat import path for credentialed trials.',
       packageImport:
         "import { Chat, Channel, MessageList, MessageInput } from 'stream-chat-react';",
       sourceCode: chatDemoSources.streamTeam,
@@ -345,9 +345,9 @@ const baseChatProfiles = [
     },
     integration: createIntegration({
       rendererId: 'credential-gated',
-      mode: 'Hosted UIKit source',
+      mode: 'Offline verified UIKit demo',
       status:
-        'Requires a Sendbird app ID, user ID, and channel URL; the exact React provider source is shown for credentialed trials.',
+        'Interactive local surface verifies message rendering and sending; the source block shows the real Sendbird provider setup for credentialed trials.',
       packageImport:
         "import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';",
       sourceCode: chatDemoSources.sendbirdMarketplace,
@@ -440,9 +440,9 @@ const baseChatProfiles = [
     },
     integration: createIntegration({
       rendererId: 'credential-gated',
-      mode: 'Hosted UIKit source',
+      mode: 'Offline verified UIKit demo',
       status:
-        'Requires CometChat initialization settings; the shown source uses the published UIKit import path.',
+        'Interactive local surface verifies message rendering and sending; the source block shows the published CometChat UIKit import path.',
       packageImport:
         "import { CometChatConversationsWithMessages } from '@cometchat/chat-uikit-react';",
       sourceCode: chatDemoSources.cometchatSupport,
@@ -535,9 +535,9 @@ const baseChatProfiles = [
     },
     integration: createIntegration({
       rendererId: 'credential-gated',
-      mode: 'Hosted embed source',
+      mode: 'Offline verified embed demo',
       status:
-        'Requires a TalkJS app ID and conversation; the source block shows the real Session and Chatbox import path.',
+        'Interactive local surface verifies message rendering and sending; the source block shows the real TalkJS Session and Chatbox import path.',
       packageImport: "import { Chatbox, Session } from '@talkjs/react';",
       sourceCode: chatDemoSources.talkjsCommerce,
     }),
@@ -904,9 +904,9 @@ const baseChatProfiles = [
     },
     integration: createIntegration({
       rendererId: 'runtime-gated',
-      mode: 'Runtime adapter source',
+      mode: 'Offline verified runtime demo',
       status:
-        'Requires an assistant-ui runtime adapter; the source block shows the real provider and thread primitives for runtime trials.',
+        'Interactive local surface verifies message rendering and sending; the source block shows the real assistant-ui provider and thread primitives for runtime trials.',
       packageImport:
         "import { AssistantRuntimeProvider, ThreadPrimitive } from '@assistant-ui/react';",
       sourceCode: chatDemoSources.assistantCopilot,

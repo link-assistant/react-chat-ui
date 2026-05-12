@@ -14,15 +14,40 @@ const rootDir = path.resolve(
 const demoRoot = path.join(rootDir, 'docs/chat-demos');
 const defaultScreenshotPath = path.join(
   rootDir,
-  'docs/screenshots/issue-3-chat-demos.png'
+  'docs/screenshots/issue-5-chat-demos.png'
 );
 
 async function captureGalleryScreenshot({ page, screenshotPath }) {
   mkdirSync(path.dirname(screenshotPath), { recursive: true });
+  await selectDemoTab({ page, demoId: 'assistant-copilot' });
   await page.selectOption('[data-testid="theme-switcher"]', 'light');
   await page.selectOption('[data-testid="language-switcher"]', 'ja');
   await page.setViewportSize({ width: 1440, height: 950 });
   await page.screenshot({ path: screenshotPath, fullPage: true });
+}
+
+async function getRenderedSurfaceText(surface) {
+  return surface.evaluate((element) => {
+    function collectText(node) {
+      const parts = [];
+
+      if (node.nodeType === 3) {
+        parts.push(node.textContent ?? '');
+      }
+
+      if (node.shadowRoot) {
+        parts.push(collectText(node.shadowRoot));
+      }
+
+      for (const child of node.childNodes) {
+        parts.push(collectText(child));
+      }
+
+      return parts.join(' ');
+    }
+
+    return collectText(element).replace(/\s+/g, ' ').trim();
+  });
 }
 
 async function exerciseProfilePage({ commander, page, demo, baseUrl }) {
@@ -38,9 +63,8 @@ async function exerciseProfilePage({ commander, page, demo, baseUrl }) {
   const composerExists = await commander.isVisible({
     selector: '[data-testid="chat-composer-input"]',
   });
-  const beforeCount = await commander.count({
-    selector: '[data-testid="chat-message"]',
-  });
+  const surface = page.locator('[data-testid="demo-surface"]');
+  const beforeCount = Number(await surface.getAttribute('data-message-count'));
 
   assert.equal(renderedDemoId, demo.id);
   assert.equal(composerExists, true);
@@ -50,12 +74,8 @@ async function exerciseProfilePage({ commander, page, demo, baseUrl }) {
     .fill(`mf send for ${demo.id}`);
   await page.locator('[data-testid="chat-composer-submit"]').click();
 
-  const afterCount = await commander.count({
-    selector: '[data-testid="chat-message"]',
-  });
-  const transcript = await commander.textContent({
-    selector: '[data-testid="message-list"]',
-  });
+  const afterCount = Number(await surface.getAttribute('data-message-count'));
+  const transcript = await getRenderedSurfaceText(surface);
   assert.equal(afterCount, beforeCount + 1);
   assert.match(transcript, new RegExp(`mf send for ${demo.id}`));
 }
@@ -68,20 +88,21 @@ async function exerciseToggles({ commander, page }) {
   await selectDemoTab({ page, demoId: 'link-assistant-own' });
 
   const before = await commander.count({
-    selector: '[data-testid="message-list"] .avatar',
+    selector: '[data-testid="demo-surface"] .own-chat-avatar',
   });
 
   await page.locator('[data-testid="toggle-showAvatar"]').click();
   await page.locator('[data-testid="toggle-showSenderName"]').click();
 
   const afterAvatars = await commander.count({
-    selector: '[data-testid="message-list"] .avatar',
+    selector: '[data-testid="demo-surface"] .own-chat-avatar',
   });
   const senderNames = await commander.count({
-    selector: '[data-testid="chat-message-author"]',
+    selector:
+      '[data-testid="demo-surface"] [data-testid="demo-message-author"]',
   });
   const replyVisible = await commander.isVisible({
-    selector: '[data-testid="chat-message-reply"]',
+    selector: '[data-testid="demo-surface"] [data-testid="demo-message-reply"]',
   });
 
   assert.equal(afterAvatars, 0);
@@ -96,20 +117,20 @@ async function exerciseToggles({ commander, page }) {
   await page.locator('[data-testid="toggle-showSenderName"]').click();
 
   const restored = await commander.count({
-    selector: '[data-testid="message-list"] .avatar',
+    selector: '[data-testid="demo-surface"] .own-chat-avatar',
   });
 
   assert.equal(restored, before);
 }
 
-async function exerciseLocale({ commander, page }) {
+async function exerciseLocale({ page }) {
   await page.selectOption('[data-testid="theme-switcher"]', 'dark');
   await page.selectOption('[data-testid="language-switcher"]', 'ja');
   await selectDemoTab({ page, demoId: 'assistant-copilot' });
   const appTheme = await page.locator('.app-shell').getAttribute('data-theme');
-  const content = await commander.textContent({
-    selector: '[data-testid="message-list"]',
-  });
+  const content = await getRenderedSurfaceText(
+    page.locator('[data-testid="demo-surface"]')
+  );
   assert.equal(appTheme, 'dark');
   assert.match(content, /未読|ツール結果|主なリスク/);
 }
@@ -127,9 +148,10 @@ async function exerciseDemo({ commander, page, demo }) {
   const title = await commander.textContent({
     selector: '.conversation-header h1',
   });
-  const beforeMessages = await commander.count({
-    selector: '[data-testid="chat-message"]',
-  });
+  const surface = page.locator('[data-testid="demo-surface"]');
+  const beforeMessages = Number(
+    await surface.getAttribute('data-message-count')
+  );
   const themeVisible = await commander.isVisible({
     selector: '[data-testid="theme-switcher"]',
   });
@@ -151,15 +173,11 @@ async function exerciseDemo({ commander, page, demo }) {
   await page.locator('[data-testid="chat-composer-input"]').fill(probe);
   await page.locator('[data-testid="chat-composer-submit"]').click();
 
-  const afterMessages = await commander.count({
-    selector: '[data-testid="chat-message"]',
-  });
-  const transcript = await commander.textContent({
-    selector: '[data-testid="message-list"]',
-  });
+  const surfaceCount = Number(await surface.getAttribute('data-message-count'));
+  const transcript = await getRenderedSurfaceText(surface);
 
   assert.equal(
-    afterMessages,
+    surfaceCount,
     beforeMessages + 1,
     `expected one new message for ${demo.id}`
   );
@@ -239,28 +257,43 @@ describe('chat demo gallery e2e', () => {
     }
   });
 
+  it('renders an external demo as one active surface without duplicated own chat', async () => {
+    await selectDemoTab({ page, demoId: 'assistant-copilot' });
+
+    const surfaceCount = await commander.count({
+      selector: '[data-testid="demo-surface"]',
+    });
+    const ownChatFrames = await commander.count({
+      selector: '.own-chat-frame',
+    });
+    const rendererId = await page
+      .locator('[data-testid="demo-surface"]')
+      .getAttribute('data-renderer-id');
+
+    assert.equal(surfaceCount, 1);
+    assert.equal(ownChatFrames, 0);
+    assert.equal(rendererId, 'runtime-gated');
+  });
+
   it('switches theme and language without losing Unicode messages', async () => {
-    await exerciseLocale({ commander, page });
+    await exerciseLocale({ page });
   });
 
   it('sends a composed markdown reply into the active demo', async () => {
     await page.selectOption('[data-testid="language-switcher"]', 'en');
     await selectDemoTab({ page, demoId: 'assistant-copilot' });
 
-    const beforeCount = await commander.count({
-      selector: '[data-testid="chat-message"]',
-    });
+    const surface = page.locator('[data-testid="demo-surface"]');
+    const beforeCount = Number(
+      await surface.getAttribute('data-message-count')
+    );
     await page
       .locator('[data-testid="chat-composer-input"]')
       .fill('**Ship it** after the screenshot passes.');
     await page.locator('[data-testid="chat-composer-submit"]').click();
 
-    const afterCount = await commander.count({
-      selector: '[data-testid="chat-message"]',
-    });
-    const content = await commander.textContent({
-      selector: '[data-testid="message-list"]',
-    });
+    const afterCount = Number(await surface.getAttribute('data-message-count'));
+    const content = await getRenderedSurfaceText(surface);
 
     assert.equal(afterCount, beforeCount + 1);
     assert.match(content, /Ship it/);
@@ -303,7 +336,7 @@ describe('chat demo gallery e2e', () => {
 
     await page.locator('[data-testid="view-tab-demo"]').click();
     await commander.waitForSelector({
-      selector: '[data-testid="message-list"]',
+      selector: '[data-testid="demo-surface"]',
     });
   });
 

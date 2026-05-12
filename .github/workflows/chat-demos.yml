@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: chat-demo-screenshot
-          path: docs/screenshots/issue-3-chat-demos.png
+          path: docs/screenshots/issue-5-chat-demos.png
 
       - name: Configure GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -95,5 +95,5 @@ jobs:
       - name: Run browser-commander tests against GitHub Pages
         env:
           CHAT_DEMO_BASE_URL: ${{ needs.deploy.outputs.page_url }}
-          CHAT_DEMO_SCREENSHOT_PATH: docs/screenshots/issue-3-chat-demos-deployed.png
+          CHAT_DEMO_SCREENSHOT_PATH: docs/screenshots/issue-5-chat-demos-deployed.png
         run: npm run test:e2e
