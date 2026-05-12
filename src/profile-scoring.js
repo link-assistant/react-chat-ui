@@ -5,6 +5,12 @@ const WEIGHTS = {
   starsMax: 18,
   liveBonus: 12,
 };
+const LIVE_RENDERER_IDS = new Set([
+  'own-chat',
+  'chatscope',
+  'react-chat-elements',
+  'deep-chat',
+]);
 
 function parseReleaseDate(value) {
   if (!value) {
@@ -37,13 +43,7 @@ function starScore(stars) {
 }
 
 function liveBonus(rendererId) {
-  if (!rendererId) {
-    return 0;
-  }
-  if (rendererId === 'credential-gated' || rendererId === 'runtime-gated') {
-    return 0;
-  }
-  return WEIGHTS.liveBonus;
+  return LIVE_RENDERER_IDS.has(rendererId) ? WEIGHTS.liveBonus : 0;
 }
 
 export function scoreProfile(profile, nowMs = Date.now()) {

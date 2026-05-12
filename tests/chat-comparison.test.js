@@ -35,6 +35,15 @@ describe('chat demo catalog', () => {
     expect(chatDemoCatalog[0].id).toBe(ownChatProfile.id);
   });
 
+  it('sorts external chat profiles by computed score after the own entry', () => {
+    const externalProfiles = chatDemoCatalog.slice(1);
+    for (let i = 1; i < externalProfiles.length; i += 1) {
+      expect(
+        externalProfiles[i - 1].score.total >= externalProfiles[i].score.total
+      ).toBe(true);
+    }
+  });
+
   it('extends to between 10 and 20 profiles', () => {
     expect(chatDemoCatalog.length >= 10).toBe(true);
     expect(chatDemoCatalog.length <= 20).toBe(true);
@@ -45,6 +54,14 @@ describe('chat demo catalog', () => {
     expect(summaries[0].isOwn).toBe(true);
     const others = summaries.slice(1);
     expect(others.every((entry) => entry.isOwn === false)).toBe(true);
+  });
+
+  it('does not expose source-only demo statuses', () => {
+    expect(
+      chatDemoCatalog.every(
+        (profile) => !profile.integration.status.includes('Source-only')
+      )
+    ).toBe(true);
   });
 });
 

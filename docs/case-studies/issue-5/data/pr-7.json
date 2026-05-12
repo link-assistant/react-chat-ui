@@ -1,0 +1,20 @@
+{
+  "author": {
+    "id": "MDQ6VXNlcjE0MzE5MDQ=",
+    "is_bot": false,
+    "login": "konard",
+    "name": "Konstantin Diachenko"
+  },
+  "baseRefName": "main",
+  "body": "## 🤖 AI-Powered Solution Draft\n\nThis pull request is being automatically generated to solve issue #5.\n\n### 📋 Issue Reference\nFixes #5\n\n### 🚧 Status\n**Work in Progress** - The AI assistant is currently analyzing and implementing the solution draft.\n\n### 📝 Implementation Details\n_Details will be added as the solution draft is developed..._\n\n---\n*This PR was created automatically by the AI issue solver*",
+  "createdAt": "2026-05-12T15:33:08Z",
+  "headRefName": "issue-5-e1b0937faaf7",
+  "isDraft": true,
+  "mergeStateStatus": "CLEAN",
+  "number": 7,
+  "reviewDecision": "",
+  "state": "OPEN",
+  "title": "[WIP] Fixes and improvements",
+  "updatedAt": "2026-05-12T15:33:10Z",
+  "url": "https://github.com/link-assistant/react-chat-ui/pull/7"
+}

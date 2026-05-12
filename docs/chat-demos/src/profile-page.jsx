@@ -1,21 +1,11 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import ReactMarkdown from 'react-markdown';
-import {
-  ChatContainer,
-  MainContainer,
-  Message as ChatScopeMessage,
-  MessageList as ChatScopeMessageList,
-} from '@chatscope/chat-ui-kit-react';
-import { MessageList as ReactChatElementsMessageList } from 'react-chat-elements';
-import { DeepChat } from 'deep-chat-react';
-import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import 'react-chat-elements/dist/main.css';
 import {
   createChatDemoStore,
   languageOptions,
   themeOptions,
 } from '../../../src/index.js';
+import { DemoSurface, localParticipant } from './demo-surfaces.jsx';
 import './styles.css';
 
 const FEATURE_TOGGLES = [
@@ -32,113 +22,11 @@ const COMPOSER_KINDS = [
 ];
 
 const store = createChatDemoStore();
-const localParticipant = { id: 'reviewer', name: 'You', role: 'Reviewer' };
 
 function getInitialToggles() {
   return FEATURE_TOGGLES.reduce(
     (current, toggle) => ({ ...current, [toggle.id]: toggle.defaultValue }),
     {}
-  );
-}
-
-function stripMarkdown(value) {
-  return value
-    .replaceAll('**', '')
-    .replaceAll('__', '')
-    .replaceAll('`', '')
-    .replace(/\[(.+?)\]\(.+?\)/g, '$1');
-}
-
-function createParticipantMap(participants) {
-  return new Map(participants.map((p) => [p.id, p]));
-}
-
-function Avatar({ label, accent }) {
-  return (
-    <span className="avatar" style={{ '--avatar-accent': accent }}>
-      {label}
-    </span>
-  );
-}
-
-function MarkdownMessage({ text }) {
-  return (
-    <div className="markdown-message">
-      <ReactMarkdown>{text}</ReactMarkdown>
-    </div>
-  );
-}
-
-function Transcript({ snapshot, messages, participants, toggles }) {
-  const participantMap = useMemo(
-    () => createParticipantMap(participants),
-    [participants]
-  );
-  const messageMap = useMemo(
-    () => new Map(messages.map((m) => [m.id, m])),
-    [messages]
-  );
-
-  return (
-    <div className="message-list" data-testid="message-list">
-      {messages.map((message) => {
-        const author = participantMap.get(message.authorId);
-        const replyTarget =
-          toggles.showReplies && message.replyToId
-            ? messageMap.get(message.replyToId)
-            : null;
-        const replyAuthor = replyTarget
-          ? participantMap.get(replyTarget.authorId)
-          : null;
-
-        return (
-          <article
-            className="message"
-            data-testid="chat-message"
-            key={message.id}
-          >
-            {toggles.showAvatar ? (
-              <Avatar
-                label={(author?.name ?? 'User')
-                  .split(' ')
-                  .map((part) => part[0])
-                  .join('')
-                  .slice(0, 2)}
-                accent={snapshot.accent}
-              />
-            ) : (
-              <span aria-hidden="true" />
-            )}
-            <div className="message-body">
-              {(toggles.showSenderName || toggles.showTimestamp) && (
-                <div className="message-meta">
-                  {toggles.showSenderName && (
-                    <strong data-testid="chat-message-author">
-                      {author?.name ?? 'Unknown'}
-                    </strong>
-                  )}
-                  {toggles.showTimestamp && (
-                    <time data-testid="chat-message-time">
-                      {message.sentAt}
-                    </time>
-                  )}
-                </div>
-              )}
-              {replyTarget && (
-                <blockquote
-                  className="reply-quote"
-                  data-testid="chat-message-reply"
-                >
-                  <strong>{replyAuthor?.name ?? 'Participant'}</strong>
-                  <span>{stripMarkdown(replyTarget.text).slice(0, 80)}</span>
-                </blockquote>
-              )}
-              <MarkdownMessage text={message.text} />
-            </div>
-          </article>
-        );
-      })}
-    </div>
   );
 }
 
@@ -208,173 +96,6 @@ function Composer({ placeholder, onSend, composerKind }) {
       </button>
     </form>
   );
-}
-
-function ChatScopePreview({ messages, participants }) {
-  const participantMap = useMemo(
-    () => createParticipantMap(participants),
-    [participants]
-  );
-
-  return (
-    <div className="library-frame chatscope-frame">
-      <MainContainer responsive>
-        <ChatContainer>
-          <ChatScopeMessageList>
-            {messages.map((message) => {
-              const author = participantMap.get(message.authorId);
-              return (
-                <ChatScopeMessage
-                  key={message.id}
-                  model={{
-                    direction:
-                      message.authorId === localParticipant.id
-                        ? 'outgoing'
-                        : 'incoming',
-                    message: stripMarkdown(message.text),
-                    position: 'single',
-                    sender: author?.name ?? 'Participant',
-                    sentTime: message.sentAt,
-                  }}
-                />
-              );
-            })}
-          </ChatScopeMessageList>
-        </ChatContainer>
-      </MainContainer>
-    </div>
-  );
-}
-
-function ReactChatElementsPreview({ messages, participants }) {
-  const participantMap = useMemo(
-    () => createParticipantMap(participants),
-    [participants]
-  );
-  const dataSource = messages.map((message) => {
-    const author = participantMap.get(message.authorId);
-    return {
-      id: message.id,
-      position: message.authorId === localParticipant.id ? 'right' : 'left',
-      type: 'text',
-      title: author?.name ?? 'Participant',
-      text: stripMarkdown(message.text),
-      dateString: message.sentAt,
-      status: message.status,
-    };
-  });
-
-  return (
-    <div className="library-frame rce-frame">
-      <ReactChatElementsMessageList
-        lockable
-        toBottomHeight="100%"
-        dataSource={dataSource}
-      />
-    </div>
-  );
-}
-
-function DeepChatPreview({ messages }) {
-  const history = messages.map((message) => ({
-    role: message.authorId === localParticipant.id ? 'user' : 'ai',
-    text: message.text,
-  }));
-
-  return (
-    <div className="library-frame deep-chat-frame">
-      <DeepChat
-        history={history}
-        textInput={{
-          disabled: true,
-          placeholder: { text: 'Use the shared composer below' },
-        }}
-        chatStyle={{ height: '360px', width: '100%' }}
-      />
-    </div>
-  );
-}
-
-function OwnChatPreview({ snapshot, messages, participants, toggles }) {
-  const participantMap = useMemo(
-    () => createParticipantMap(participants),
-    [participants]
-  );
-
-  return (
-    <div className="library-frame own-chat-frame" data-testid="own-chat-frame">
-      <ul className="own-chat-list">
-        {messages.map((message) => {
-          const author = participantMap.get(message.authorId);
-          const isLocal = message.authorId === localParticipant.id;
-          return (
-            <li
-              key={message.id}
-              className={`own-chat-message ${isLocal ? 'is-local' : ''}`}
-              data-testid="own-chat-message"
-            >
-              {toggles.showAvatar && (
-                <span
-                  className="own-chat-avatar"
-                  style={{ background: snapshot.accent }}
-                >
-                  {(author?.name ?? '?').slice(0, 2)}
-                </span>
-              )}
-              <div className="own-chat-body">
-                {toggles.showSenderName && (
-                  <strong>{author?.name ?? 'Participant'}</strong>
-                )}
-                <ReactMarkdown>{message.text}</ReactMarkdown>
-                {toggles.showTimestamp && (
-                  <time className="own-chat-time">{message.sentAt}</time>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
-
-function ReferencePreview({ snapshot }) {
-  return (
-    <div className="reference-preview">
-      <strong>{snapshot.integration.mode}</strong>
-      <p>{snapshot.integration.status}</p>
-      <code>{snapshot.integration.packageImport}</code>
-    </div>
-  );
-}
-
-function LibraryRenderer({ snapshot, messages, participants, toggles }) {
-  switch (snapshot.integration.rendererId) {
-    case 'chatscope':
-      return (
-        <ChatScopePreview messages={messages} participants={participants} />
-      );
-    case 'react-chat-elements':
-      return (
-        <ReactChatElementsPreview
-          messages={messages}
-          participants={participants}
-        />
-      );
-    case 'deep-chat':
-      return <DeepChatPreview messages={messages} />;
-    case 'own-chat':
-      return (
-        <OwnChatPreview
-          snapshot={snapshot}
-          messages={messages}
-          participants={participants}
-          toggles={toggles}
-        />
-      );
-    default:
-      return <ReferencePreview snapshot={snapshot} />;
-  }
 }
 
 function ProfilePage({ demoId }) {
@@ -495,12 +216,6 @@ function ProfilePage({ demoId }) {
           </div>
         </header>
         <div className="profile-body">
-          <Transcript
-            snapshot={snapshot}
-            messages={messages}
-            participants={participants}
-            toggles={toggles}
-          />
           <section className="library-preview">
             <header>
               <div>
@@ -509,7 +224,7 @@ function ProfilePage({ demoId }) {
               </div>
               <span>{snapshot.integration.rendererId}</span>
             </header>
-            <LibraryRenderer
+            <DemoSurface
               snapshot={snapshot}
               messages={messages}
               participants={participants}
