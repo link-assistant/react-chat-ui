@@ -7,3 +7,6 @@ package-lock.json
 CLAUDE.md
 # Case study raw data files (downloaded from external sources)
 docs/case-studies/*/data/
+# Auto-generated micro-frontend profile pages
+docs/chat-demos/profiles/
+experiments/

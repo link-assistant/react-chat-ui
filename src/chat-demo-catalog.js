@@ -1,3 +1,7 @@
+import { ownChatProfile } from './own-chat-profile.js';
+import { extendedChatProfiles } from './extended-chat-catalog.js';
+import { rankProfiles, scoreProfile } from './profile-scoring.js';
+
 const createMessage = (id, authorId, sentAt, status, text, meta = {}) => ({
   id,
   authorId,
@@ -227,7 +231,7 @@ export const languageOptions = [
   },
 ];
 
-export const chatDemoCatalog = [
+const baseChatProfiles = [
   {
     id: 'stream-team',
     name: 'Stream Team Chat',
@@ -274,6 +278,31 @@ export const chatDemoCatalog = [
       'Keep channel density high and reserve color for unread and mention states.',
       'Group sequential messages by sender to reduce repeated avatar noise.',
       'Expose thread context next to the main timeline on desktop.',
+    ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: true,
+      reply: true,
+      markdownMessages: true,
+      markdownComposer: false,
+      textAreaComposer: true,
+      contentEditableComposer: false,
+      inlineComposer: false,
+      threads: true,
+      typing: true,
+      reactions: true,
+      fileAttachments: true,
+      aiStreaming: false,
+      moderation: true,
+    },
+    limitations: [
+      'Hosted Stream backend required for live data.',
+      'Stream proprietary license applies.',
+    ],
+    lockIns: [
+      'Requires Stream Chat account and tokens.',
+      'CSS bundle is large; tree-shaking is limited.',
     ],
     participants: [
       { id: 'alex', name: 'Alex Morgan', role: 'Product' },
@@ -345,6 +374,31 @@ export const chatDemoCatalog = [
       'Keep seller and buyer actions close to the composer.',
       'Use status labels for trust, delivery, and response expectations.',
     ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: true,
+      reply: true,
+      markdownMessages: false,
+      markdownComposer: false,
+      textAreaComposer: true,
+      contentEditableComposer: false,
+      inlineComposer: false,
+      threads: true,
+      typing: true,
+      reactions: true,
+      fileAttachments: true,
+      aiStreaming: false,
+      moderation: true,
+    },
+    limitations: [
+      'Hosted Sendbird backend required.',
+      'Proprietary UIKit license.',
+    ],
+    lockIns: [
+      'Requires Sendbird application and user tokens.',
+      'UIKit theming uses Sendbird tokens, not your design system.',
+    ],
     participants: [
       { id: 'maya', name: 'Maya Ross', role: 'Buyer' },
       { id: 'omar', name: 'Omar Ali', role: 'Seller' },
@@ -415,6 +469,31 @@ export const chatDemoCatalog = [
       'Separate private agent notes from customer-visible replies.',
       'Keep escalation controls reachable but visually quieter than reply actions.',
     ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: true,
+      reply: true,
+      markdownMessages: false,
+      markdownComposer: false,
+      textAreaComposer: true,
+      contentEditableComposer: false,
+      inlineComposer: false,
+      threads: true,
+      typing: true,
+      reactions: true,
+      fileAttachments: true,
+      aiStreaming: false,
+      moderation: true,
+    },
+    limitations: [
+      'Hosted CometChat backend required.',
+      'CometChat legal terms apply to embedded use.',
+    ],
+    lockIns: [
+      'Requires CometChat application credentials.',
+      'Theming routed through UIKit tokens.',
+    ],
     participants: [
       { id: 'ira', name: 'Ira Novak', role: 'Customer' },
       { id: 'zoe', name: 'Zoe King', role: 'Agent' },
@@ -483,6 +562,31 @@ export const chatDemoCatalog = [
       'Make the embedded frame feel native by matching spacing and typography.',
       'Show object context so the thread does not become detached from the task.',
       'Use clear fallback states when a counterparty is offline.',
+    ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: true,
+      reply: true,
+      markdownMessages: false,
+      markdownComposer: false,
+      textAreaComposer: true,
+      contentEditableComposer: false,
+      inlineComposer: false,
+      threads: false,
+      typing: true,
+      reactions: false,
+      fileAttachments: true,
+      aiStreaming: false,
+      moderation: false,
+    },
+    limitations: [
+      'Hosted TalkJS backend required.',
+      'Embed renders inside an iframe.',
+    ],
+    lockIns: [
+      'Requires TalkJS app id and session.',
+      'Customization limited by TalkJS theme settings.',
     ],
     participants: [
       { id: 'lena', name: 'Lena Ortiz', role: 'Host' },
@@ -554,6 +658,28 @@ export const chatDemoCatalog = [
       'Keep token naming close to the product design system.',
       'Add accessibility tests around every custom composer action.',
     ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: true,
+      reply: true,
+      markdownMessages: true,
+      markdownComposer: false,
+      textAreaComposer: true,
+      contentEditableComposer: true,
+      inlineComposer: false,
+      threads: false,
+      typing: true,
+      reactions: false,
+      fileAttachments: true,
+      aiStreaming: false,
+      moderation: false,
+    },
+    limitations: [
+      'No hosted backend included.',
+      'Reactions and threads must be added by the host app.',
+    ],
+    lockIns: ['CSS class names follow ChatScope conventions.'],
     participants: [
       { id: 'elena', name: 'Elena Petrova', role: 'Maintainer' },
       { id: 'jules', name: 'Jules Martin', role: 'Contributor' },
@@ -624,6 +750,28 @@ export const chatDemoCatalog = [
       'Pair lightweight widgets with strict spacing and typography tokens.',
       'Add your own accessibility checks for any custom input composition.',
     ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: true,
+      reply: true,
+      markdownMessages: false,
+      markdownComposer: false,
+      textAreaComposer: true,
+      contentEditableComposer: false,
+      inlineComposer: true,
+      threads: false,
+      typing: false,
+      reactions: false,
+      fileAttachments: true,
+      aiStreaming: false,
+      moderation: false,
+    },
+    limitations: [
+      'Widgets are visual primitives without a state model.',
+      'No hosted backend.',
+    ],
+    lockIns: ['Component props follow react-chat-elements naming.'],
     participants: [
       { id: 'noah', name: 'Noah Wright', role: 'PM' },
       { id: 'sara', name: 'Sara Kim', role: 'Frontend' },
@@ -693,6 +841,28 @@ export const chatDemoCatalog = [
       'Make multimodal affordances explicit without crowding the composer.',
       'Log prompt and response strings through Unicode-safe persistence.',
     ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: true,
+      reply: false,
+      markdownMessages: true,
+      markdownComposer: true,
+      textAreaComposer: true,
+      contentEditableComposer: false,
+      inlineComposer: false,
+      threads: false,
+      typing: true,
+      reactions: false,
+      fileAttachments: true,
+      aiStreaming: true,
+      moderation: false,
+    },
+    limitations: [
+      'Web component wrapper; styling crosses shadow DOM.',
+      'AI provider is required to power live responses.',
+    ],
+    lockIns: ['Custom element registration uses the deep-chat tag.'],
     participants: [
       { id: 'ren', name: 'Ren Brooks', role: 'User' },
       { id: 'deep', name: 'Deep Chat', role: 'Assistant' },
@@ -763,6 +933,28 @@ export const chatDemoCatalog = [
       'Differentiate generated answers from user-authored messages.',
       'Persist prompts and outputs through the same Unicode-safe store.',
     ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: false,
+      reply: false,
+      markdownMessages: true,
+      markdownComposer: true,
+      textAreaComposer: true,
+      contentEditableComposer: false,
+      inlineComposer: false,
+      threads: false,
+      typing: true,
+      reactions: false,
+      fileAttachments: false,
+      aiStreaming: true,
+      moderation: false,
+    },
+    limitations: [
+      'Requires an assistant-ui runtime adapter to power messages.',
+      'No included backend.',
+    ],
+    lockIns: ['Runtime adapter contract is assistant-ui specific.'],
     participants: [
       { id: 'pat', name: 'Pat Rivera', role: 'Operator' },
       { id: 'copilot', name: 'Copilot', role: 'Assistant' },
@@ -786,6 +978,17 @@ export const chatDemoCatalog = [
       }),
     ],
   },
+];
+
+const externalProfiles = [...baseChatProfiles, ...extendedChatProfiles];
+const rankedExternal = rankProfiles(externalProfiles).map((entry) => ({
+  ...entry.profile,
+  score: entry.score,
+}));
+
+export const chatDemoCatalog = [
+  { ...ownChatProfile, score: scoreProfile(ownChatProfile) },
+  ...rankedExternal,
 ];
 
 export function getLanguageOption(languageId = 'en') {
@@ -820,6 +1023,25 @@ export function listChatDemoSummaries() {
     integrationStatus: demo.integration.status,
     accent: demo.accent,
     avatar: demo.avatar,
+    score: demo.score?.total ?? 0,
+    isOwn: demo.id === ownChatProfile.id,
+  }));
+}
+
+export function getComparisonMatrix() {
+  return chatDemoCatalog.map((demo) => ({
+    id: demo.id,
+    name: demo.name,
+    packageName: demo.packageName,
+    license: demo.maintenance?.license ?? '-',
+    latestVersion: demo.maintenance?.latestVersion ?? '-',
+    lastReleaseAt: demo.maintenance?.lastReleaseAt ?? '-',
+    stars: demo.maintenance?.stars ?? 0,
+    featureMatrix: demo.featureMatrix ?? {},
+    limitations: demo.limitations ?? [],
+    lockIns: demo.lockIns ?? [],
+    integrationMode: demo.integration.mode,
+    score: demo.score ?? scoreProfile(demo),
   }));
 }
 
