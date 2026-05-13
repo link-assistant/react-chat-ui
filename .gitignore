@@ -147,3 +147,6 @@ docs/chat-demos/profiles/
 # Ad-hoc experiments
 experiments/
 
+# Playwright MCP scratch snapshots
+.playwright-mcp/
+

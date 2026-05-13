@@ -272,7 +272,7 @@ describe('chat demo gallery e2e', () => {
 
     assert.equal(surfaceCount, 1);
     assert.equal(ownChatFrames, 0);
-    assert.equal(rendererId, 'runtime-gated');
+    assert.equal(rendererId, 'assistant-ui');
   });
 
   it('switches theme and language without losing Unicode messages', async () => {

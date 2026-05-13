@@ -10,3 +10,5 @@ docs/case-studies/*/data/
 # Auto-generated micro-frontend profile pages
 docs/chat-demos/profiles/
 experiments/
+# Playwright MCP scratch snapshots
+.playwright-mcp/

@@ -249,10 +249,10 @@ const baseChatProfiles = [
       stars: 831,
     },
     integration: createIntegration({
-      rendererId: 'credential-gated',
-      mode: 'Offline verified SDK demo',
+      rendererId: 'stream-source',
+      mode: 'Hosted SDK source preview',
       status:
-        'Interactive local surface verifies message rendering and sending; the source block shows the real Stream Chat import path for credentialed trials.',
+        'Stream Chat requires a hosted Stream app and a user token, so the live surface shows the real published import source plus an offline transcript that exercises the composer.',
       packageImport:
         "import { Chat, Channel, MessageList, MessageInput } from 'stream-chat-react';",
       sourceCode: chatDemoSources.streamTeam,
@@ -344,10 +344,10 @@ const baseChatProfiles = [
       stars: 235,
     },
     integration: createIntegration({
-      rendererId: 'credential-gated',
-      mode: 'Offline verified UIKit demo',
+      rendererId: 'sendbird-source',
+      mode: 'Hosted UIKit source preview',
       status:
-        'Interactive local surface verifies message rendering and sending; the source block shows the real Sendbird provider setup for credentialed trials.',
+        'Sendbird UIKit needs an app ID, user ID, and channel URL; the live surface shows the real published provider source plus an offline transcript that exercises the composer.',
       packageImport:
         "import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';",
       sourceCode: chatDemoSources.sendbirdMarketplace,
@@ -439,10 +439,10 @@ const baseChatProfiles = [
       stars: 771,
     },
     integration: createIntegration({
-      rendererId: 'credential-gated',
-      mode: 'Offline verified UIKit demo',
+      rendererId: 'cometchat-source',
+      mode: 'Hosted UIKit source preview',
       status:
-        'Interactive local surface verifies message rendering and sending; the source block shows the published CometChat UIKit import path.',
+        'CometChat UIKit initialisation requires app credentials; the live surface shows the published UIKit source plus an offline transcript that exercises the composer.',
       packageImport:
         "import { CometChatConversationsWithMessages } from '@cometchat/chat-uikit-react';",
       sourceCode: chatDemoSources.cometchatSupport,
@@ -534,10 +534,10 @@ const baseChatProfiles = [
       stars: 16,
     },
     integration: createIntegration({
-      rendererId: 'credential-gated',
-      mode: 'Offline verified embed demo',
+      rendererId: 'talkjs-source',
+      mode: 'Hosted embed source preview',
       status:
-        'Interactive local surface verifies message rendering and sending; the source block shows the real TalkJS Session and Chatbox import path.',
+        'TalkJS Session and Chatbox need a TalkJS app ID and conversation reference; the live surface shows the real published import source plus an offline transcript that exercises the composer.',
       packageImport: "import { Chatbox, Session } from '@talkjs/react';",
       sourceCode: chatDemoSources.talkjsCommerce,
     }),
@@ -903,10 +903,10 @@ const baseChatProfiles = [
       stars: 9968,
     },
     integration: createIntegration({
-      rendererId: 'runtime-gated',
-      mode: 'Offline verified runtime demo',
+      rendererId: 'assistant-ui',
+      mode: 'Offline echo runtime demo',
       status:
-        'Interactive local surface verifies message rendering and sending; the source block shows the real assistant-ui provider and thread primitives for runtime trials.',
+        'assistant-ui provider runs locally with an offline echo runtime: the composer renders the real React primitives, sends a message, and acknowledges it without external services.',
       packageImport:
         "import { AssistantRuntimeProvider, ThreadPrimitive } from '@assistant-ui/react';",
       sourceCode: chatDemoSources.assistantCopilot,
@@ -1028,21 +1028,30 @@ export function listChatDemoSummaries() {
   }));
 }
 
-export function getComparisonMatrix() {
-  return chatDemoCatalog.map((demo) => ({
+function toComparisonRow(demo) {
+  const score = demo.score ?? scoreProfile(demo);
+  const maintenance = demo.maintenance ?? {};
+  const integration = demo.integration ?? {};
+  return {
     id: demo.id,
     name: demo.name,
     packageName: demo.packageName,
-    license: demo.maintenance?.license ?? '-',
-    latestVersion: demo.maintenance?.latestVersion ?? '-',
-    lastReleaseAt: demo.maintenance?.lastReleaseAt ?? '-',
-    stars: demo.maintenance?.stars ?? 0,
+    license: maintenance.license ?? '-',
+    latestVersion: maintenance.latestVersion ?? '-',
+    lastReleaseAt: maintenance.lastReleaseAt ?? '-',
+    stars: maintenance.stars ?? 0,
     featureMatrix: demo.featureMatrix ?? {},
     limitations: demo.limitations ?? [],
     lockIns: demo.lockIns ?? [],
-    integrationMode: demo.integration.mode,
-    score: demo.score ?? scoreProfile(demo),
-  }));
+    integrationMode: integration.mode,
+    rendererId: integration.rendererId ?? 'unknown',
+    liveTier: score.liveTier ?? 'D',
+    score,
+  };
+}
+
+export function getComparisonMatrix() {
+  return chatDemoCatalog.map(toComparisonRow);
 }
 
 export function getRequirementCoverage() {

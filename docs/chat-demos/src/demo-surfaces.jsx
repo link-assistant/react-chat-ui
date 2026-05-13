@@ -234,7 +234,7 @@ function OwnChatPreview({ snapshot, messages, participants, toggles }) {
   );
 }
 
-function OfflineAdapterPreview({ snapshot, messages, participants, toggles }) {
+function AdapterThread({ snapshot, messages, participants, toggles }) {
   const participantMap = useMemo(
     () => createParticipantMap(participants),
     [participants]
@@ -245,69 +245,121 @@ function OfflineAdapterPreview({ snapshot, messages, participants, toggles }) {
   );
 
   return (
+    <div className="adapter-thread" role="log">
+      {messages.map((message) => {
+        const author = participantMap.get(message.authorId);
+        const isLocal = message.authorId === localParticipant.id;
+        const replyTarget =
+          toggles.showReplies && message.replyToId
+            ? messageMap.get(message.replyToId)
+            : null;
+        const replyAuthor = replyTarget
+          ? participantMap.get(replyTarget.authorId)
+          : null;
+
+        return (
+          <article
+            className={`adapter-message ${isLocal ? 'is-local' : ''}`}
+            data-testid="demo-message"
+            key={message.id}
+          >
+            {toggles.showAvatar && (
+              <Avatar
+                accent={snapshot.accent}
+                className="adapter-avatar"
+                label={getInitials(author?.name ?? 'User')}
+              />
+            )}
+            <div className="adapter-bubble">
+              {(toggles.showSenderName || toggles.showTimestamp) && (
+                <div className="adapter-meta">
+                  {toggles.showSenderName && (
+                    <strong data-testid="demo-message-author">
+                      {author?.name ?? 'Participant'}
+                    </strong>
+                  )}
+                  {toggles.showTimestamp && <time>{message.sentAt}</time>}
+                </div>
+              )}
+              {replyTarget && (
+                <blockquote
+                  className="reply-quote"
+                  data-testid="demo-message-reply"
+                >
+                  <strong>{replyAuthor?.name ?? 'Participant'}</strong>
+                  <span>{stripMarkdown(replyTarget.text).slice(0, 80)}</span>
+                </blockquote>
+              )}
+              <ReactMarkdown>{message.text}</ReactMarkdown>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
+function OfflineAdapterPreview({ snapshot, messages, participants, toggles }) {
+  return (
     <SurfaceFrame
       className="adapter-chat-frame"
       messages={messages}
       rendererId={snapshot.integration.rendererId}
       snapshot={snapshot}
     >
-      <div className="adapter-thread" role="log">
-        {messages.map((message) => {
-          const author = participantMap.get(message.authorId);
-          const isLocal = message.authorId === localParticipant.id;
-          const replyTarget =
-            toggles.showReplies && message.replyToId
-              ? messageMap.get(message.replyToId)
-              : null;
-          const replyAuthor = replyTarget
-            ? participantMap.get(replyTarget.authorId)
-            : null;
+      <AdapterThread
+        messages={messages}
+        participants={participants}
+        snapshot={snapshot}
+        toggles={toggles}
+      />
+    </SurfaceFrame>
+  );
+}
 
-          return (
-            <article
-              className={`adapter-message ${isLocal ? 'is-local' : ''}`}
-              data-testid="demo-message"
-              key={message.id}
-            >
-              {toggles.showAvatar && (
-                <Avatar
-                  accent={snapshot.accent}
-                  className="adapter-avatar"
-                  label={getInitials(author?.name ?? 'User')}
-                />
-              )}
-              <div className="adapter-bubble">
-                {(toggles.showSenderName || toggles.showTimestamp) && (
-                  <div className="adapter-meta">
-                    {toggles.showSenderName && (
-                      <strong data-testid="demo-message-author">
-                        {author?.name ?? 'Participant'}
-                      </strong>
-                    )}
-                    {toggles.showTimestamp && <time>{message.sentAt}</time>}
-                  </div>
-                )}
-                {replyTarget && (
-                  <blockquote
-                    className="reply-quote"
-                    data-testid="demo-message-reply"
-                  >
-                    <strong>{replyAuthor?.name ?? 'Participant'}</strong>
-                    <span>{stripMarkdown(replyTarget.text).slice(0, 80)}</span>
-                  </blockquote>
-                )}
-                <ReactMarkdown>{message.text}</ReactMarkdown>
-              </div>
-            </article>
-          );
-        })}
+const HOSTED_SOURCE_RENDERERS = new Set([
+  'stream-source',
+  'sendbird-source',
+  'cometchat-source',
+  'talkjs-source',
+  'livechat-source',
+]);
+
+function HostedSourcePreview({ snapshot, messages, participants, toggles }) {
+  const raw = snapshot.integration.sourceCode?.raw ?? '';
+  return (
+    <SurfaceFrame
+      className="hosted-source-frame"
+      messages={messages}
+      rendererId={snapshot.integration.rendererId}
+      snapshot={snapshot}
+    >
+      <div className="hosted-source-grid">
+        <aside className="hosted-source-panel">
+          <header>
+            <strong>Hosted SDK source</strong>
+            <span>{snapshot.integration.status}</span>
+          </header>
+          <pre>
+            <code>{raw || snapshot.integration.packageImport}</code>
+          </pre>
+        </aside>
+        <div className="hosted-source-transcript">
+          <AdapterThread
+            messages={messages}
+            participants={participants}
+            snapshot={snapshot}
+            toggles={toggles}
+          />
+        </div>
       </div>
     </SurfaceFrame>
   );
 }
 
 export function DemoSurface({ snapshot, messages, participants, toggles }) {
-  switch (snapshot.integration.rendererId) {
+  const rendererId = snapshot.integration.rendererId;
+  switch (rendererId) {
     case 'chatscope':
       return (
         <ChatScopePreview
@@ -336,6 +388,16 @@ export function DemoSurface({ snapshot, messages, participants, toggles }) {
         />
       );
     default:
+      if (HOSTED_SOURCE_RENDERERS.has(rendererId)) {
+        return (
+          <HostedSourcePreview
+            messages={messages}
+            participants={participants}
+            snapshot={snapshot}
+            toggles={toggles}
+          />
+        );
+      }
       return (
         <OfflineAdapterPreview
           messages={messages}

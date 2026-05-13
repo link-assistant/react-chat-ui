@@ -6,6 +6,7 @@ import {
   themeOptions,
 } from '../../../src/index.js';
 import { DemoSurface, localParticipant } from './demo-surfaces.jsx';
+import { debugEnabled, debugLog } from './debug.js';
 import './styles.css';
 
 const FEATURE_TOGGLES = [
@@ -115,6 +116,7 @@ function ProfilePage({ demoId }) {
   );
 
   function handleSend(text) {
+    debugLog('send', { demoId, length: text.length });
     setComposed((current) => [
       ...current,
       {
@@ -147,7 +149,14 @@ function ProfilePage({ demoId }) {
         <header className="workspace-header">
           <div>
             <p>{snapshot.packageName}</p>
-            <h1>{snapshot.name}</h1>
+            <h1>
+              {snapshot.name}
+              {debugEnabled ? (
+                <span className="debug-chip" data-testid="debug-chip">
+                  debug
+                </span>
+              ) : null}
+            </h1>
           </div>
           <div className="toolbar" data-testid="demo-toolbar">
             <a className="back-link" href="../index.html">

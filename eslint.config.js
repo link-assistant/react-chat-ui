@@ -81,6 +81,22 @@ export default [
     },
   },
   {
+    // Browser-runtime files (docs/chat-demos) need DOM globals
+    files: ['docs/chat-demos/src/**/*.js'],
+    languageOptions: {
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        URLSearchParams: 'readonly',
+        Event: 'readonly',
+        Node: 'readonly',
+        performance: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame: 'readonly',
+      },
+    },
+  },
+  {
     ignores: [
       'node_modules/**',
       'coverage/**',

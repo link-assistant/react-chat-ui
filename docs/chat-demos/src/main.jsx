@@ -7,6 +7,7 @@ import {
   themeOptions,
 } from '../../../src/index.js';
 import { Avatar, DemoSurface, localParticipant } from './demo-surfaces.jsx';
+import { debugEnabled, debugLog } from './debug.js';
 import './styles.css';
 
 const FEATURE_TOGGLES = [
@@ -369,6 +370,50 @@ const COMPARE_FEATURE_COLUMNS = [
   { id: 'moderation', label: 'Moderation' },
 ];
 
+const TIER_LABEL = {
+  A: { chip: '🟢 A', title: 'Real React surface, working composer' },
+  B: { chip: '🟡 B', title: 'Offline echo adapter' },
+  C: { chip: '🟠 C', title: 'Hosted SDK source preview' },
+  D: { chip: '🔴 D', title: 'Source listing only' },
+};
+
+function FeatureBadge({ supported, label }) {
+  if (supported === true) {
+    return (
+      <span
+        className="feature-badge is-yes"
+        role="img"
+        aria-label={`${label}: supported`}
+        title={`${label}: supported`}
+      >
+        ✅
+      </span>
+    );
+  }
+  if (supported === 'partial' || supported === 'maybe') {
+    return (
+      <span
+        className="feature-badge is-partial"
+        role="img"
+        aria-label={`${label}: partial`}
+        title={`${label}: partial`}
+      >
+        ⚠️
+      </span>
+    );
+  }
+  return (
+    <span
+      className="feature-badge is-no"
+      role="img"
+      aria-label={`${label}: not supported`}
+      title={`${label}: not supported`}
+    >
+      ❌
+    </span>
+  );
+}
+
 function CompareView({ rows }) {
   return (
     <section className="compare-view" data-testid="compare-view">
@@ -376,7 +421,16 @@ function CompareView({ rows }) {
         <h2>Feature, limitation, and lock-in matrix</h2>
         <p>
           {rows.length} profiles ranked by computed score. Higher means richer
-          features, better maintenance, and more configurable surfaces.
+          features, better maintenance, and more configurable surfaces. The tier
+          chip reflects how much of the library actually renders in this
+          gallery: <span className="tier-chip tier-a">{TIER_LABEL.A.chip}</span>{' '}
+          real React surface,{' '}
+          <span className="tier-chip tier-b">{TIER_LABEL.B.chip}</span> offline
+          echo adapter,{' '}
+          <span className="tier-chip tier-c">{TIER_LABEL.C.chip}</span> hosted
+          SDK source preview,{' '}
+          <span className="tier-chip tier-d">{TIER_LABEL.D.chip}</span> source
+          listing only.
         </p>
       </header>
       <div className="compare-table-wrap">
@@ -384,6 +438,7 @@ function CompareView({ rows }) {
           <thead>
             <tr>
               <th>Profile</th>
+              <th>Tier</th>
               <th>Score</th>
               <th>License</th>
               <th>Stars</th>
@@ -396,38 +451,61 @@ function CompareView({ rows }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr key={row.id} data-testid="compare-row">
-                <th scope="row">
-                  <strong>{row.name}</strong>
-                  <small>{row.packageName}</small>
-                  <em>{row.integrationMode}</em>
-                </th>
-                <td>{row.score.total.toFixed(1)}</td>
-                <td>{row.license}</td>
-                <td>{formatStars(row.stars)}</td>
-                <td>{row.lastReleaseAt}</td>
-                {COMPARE_FEATURE_COLUMNS.map((column) => (
-                  <td key={column.id} aria-label={column.label}>
-                    {row.featureMatrix[column.id] ? 'Yes' : 'No'}
+            {rows.map((row) => {
+              const tier = row.liveTier ?? 'D';
+              const tierMeta = TIER_LABEL[tier] ?? TIER_LABEL.D;
+              return (
+                <tr key={row.id} data-testid="compare-row" data-tier={tier}>
+                  <th scope="row">
+                    <strong>{row.name}</strong>
+                    <small>{row.packageName}</small>
+                    <em>{row.integrationMode}</em>
+                  </th>
+                  <td>
+                    <span
+                      className={`tier-chip tier-${tier.toLowerCase()}`}
+                      title={tierMeta.title}
+                    >
+                      {tierMeta.chip}
+                    </span>
                   </td>
-                ))}
-                <td>
-                  <ul>
-                    {row.limitations.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </td>
-                <td>
-                  <ul>
-                    {row.lockIns.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </td>
-              </tr>
-            ))}
+                  <td>
+                    <strong>{row.score.total.toFixed(1)}</strong>
+                  </td>
+                  <td>{row.license}</td>
+                  <td>{formatStars(row.stars)}</td>
+                  <td>{row.lastReleaseAt}</td>
+                  {COMPARE_FEATURE_COLUMNS.map((column) => (
+                    <td
+                      key={column.id}
+                      aria-label={column.label}
+                      data-feature-state={
+                        row.featureMatrix[column.id] ? 'yes' : 'no'
+                      }
+                    >
+                      <FeatureBadge
+                        supported={row.featureMatrix[column.id]}
+                        label={column.label}
+                      />
+                    </td>
+                  ))}
+                  <td>
+                    <ul>
+                      {row.limitations.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      {row.lockIns.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -556,6 +634,7 @@ function App() {
   const compareRows = useMemo(() => getComparisonMatrix(), []);
 
   function handleSend(text) {
+    debugLog('send', { demoId: selectedDemoId, length: text.length });
     setComposedMessages((current) => {
       const existing = current[selectedDemoId] ?? [];
       const nextIndex = existing.length + 1;
@@ -578,6 +657,7 @@ function App() {
   }
 
   function handleMetricsChange(demoId, metrics) {
+    debugLog('metrics', { demoId, ...metrics });
     setRenderMetrics((current) => ({
       ...current,
       [demoId]: metrics,
@@ -602,7 +682,14 @@ function App() {
         <header className="workspace-header">
           <div>
             <p>React chat UI</p>
-            <h1>Comparison lab</h1>
+            <h1>
+              Comparison lab
+              {debugEnabled ? (
+                <span className="debug-chip" data-testid="debug-chip">
+                  debug
+                </span>
+              ) : null}
+            </h1>
           </div>
           <Toolbar
             composerKind={composerKind}
