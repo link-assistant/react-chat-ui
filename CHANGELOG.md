@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.0
+
+### Minor Changes
+
+- 81bd818: Stop rendering fake fallback chat transcripts for unavailable integrations, add renderer capability scoring, and require explicit reply-target selection before rendering reply blocks.
+
 ## 0.12.0
 
 ### Minor Changes
