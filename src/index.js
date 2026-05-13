@@ -13,6 +13,8 @@ export {
 export { ownChatProfile } from './own-chat-profile.js';
 export { extendedChatProfiles } from './extended-chat-catalog.js';
 export {
+  getLiveTier,
+  profileLiveTierPoints,
   profileScoringWeights,
   rankProfiles,
   scoreProfile,

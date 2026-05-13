@@ -5,12 +5,37 @@ const WEIGHTS = {
   starsMax: 18,
   liveBonus: 12,
 };
-const LIVE_RENDERER_IDS = new Set([
-  'own-chat',
-  'chatscope',
-  'react-chat-elements',
-  'deep-chat',
-]);
+
+const LIVE_TIER_POINTS = {
+  A: 12,
+  B: 8,
+  C: 4,
+  D: 0,
+};
+
+const LIVE_TIER_RENDERERS = {
+  A: new Set([
+    'own-chat',
+    'chatscope',
+    'react-chat-elements',
+    'deep-chat',
+    'minchat',
+    'react-simple-chatbot',
+    'react-chatbot-kit',
+    'nlux',
+    'vercel-ai',
+    'assistant-ui',
+    'rocket-chat-fuselage',
+  ]),
+  B: new Set(['offline-echo']),
+  C: new Set([
+    'stream-source',
+    'sendbird-source',
+    'cometchat-source',
+    'talkjs-source',
+    'livechat-source',
+  ]),
+};
 
 function parseReleaseDate(value) {
   if (!value) {
@@ -42,8 +67,20 @@ function starScore(stars) {
   return Math.round(clamped * WEIGHTS.starsMax);
 }
 
-function liveBonus(rendererId) {
-  return LIVE_RENDERER_IDS.has(rendererId) ? WEIGHTS.liveBonus : 0;
+export function getLiveTier(rendererId) {
+  if (!rendererId) {
+    return 'D';
+  }
+  if (LIVE_TIER_RENDERERS.A.has(rendererId)) {
+    return 'A';
+  }
+  if (LIVE_TIER_RENDERERS.B.has(rendererId)) {
+    return 'B';
+  }
+  if (LIVE_TIER_RENDERERS.C.has(rendererId)) {
+    return 'C';
+  }
+  return 'D';
 }
 
 export function scoreProfile(profile, nowMs = Date.now()) {
@@ -57,12 +94,15 @@ export function scoreProfile(profile, nowMs = Date.now()) {
   const surfacePoints = Math.min(18, surfaceCount * WEIGHTS.surface);
   const recencyPoints = recencyScore(profile.maintenance?.lastReleaseAt, nowMs);
   const starsPoints = starScore(profile.maintenance?.stars ?? 0);
-  const livePoints = liveBonus(profile.integration?.rendererId);
+  const rendererId = profile.integration?.rendererId;
+  const liveTier = getLiveTier(rendererId);
+  const livePoints = LIVE_TIER_POINTS[liveTier];
   const total =
     featurePoints + surfacePoints + recencyPoints + starsPoints + livePoints;
 
   return {
     total,
+    liveTier,
     breakdown: {
       featurePoints,
       surfacePoints,
@@ -81,3 +121,4 @@ export function rankProfiles(profiles, nowMs = Date.now()) {
 }
 
 export const profileScoringWeights = WEIGHTS;
+export const profileLiveTierPoints = LIVE_TIER_POINTS;
