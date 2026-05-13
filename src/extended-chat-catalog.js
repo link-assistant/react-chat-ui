@@ -85,6 +85,35 @@ export function VercelAiDemo() {
     </div>
   );
 }`,
+  reactChatbotify: `
+import ChatBot from 'react-chatbotify';
+
+export function ReactChatbotifyDemo() {
+  const flow = {
+    start: {
+      message: 'Hello, how can I help?',
+      path: 'end',
+    },
+    end: {
+      message: 'Thanks for the details.',
+      chatDisabled: true,
+    },
+  };
+
+  return <ChatBot flow={flow} />;
+}`,
+  reactChatWidget: `
+import { useEffect } from 'react';
+import { Widget, addResponseMessage } from 'react-chat-widget';
+import 'react-chat-widget/lib/styles.css';
+
+export function ReactChatWidgetDemo() {
+  useEffect(() => {
+    addResponseMessage('Welcome to this conversation.');
+  }, []);
+
+  return <Widget title="Support" subtitle="Online" />;
+}`,
 };
 
 function normalize(sourceCode) {
@@ -129,8 +158,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'minchat',
-      'Offline verified package demo',
-      'Interactive local surface verifies message rendering and sending; the source block shows the @minchat/react-chat-ui MessageList and MessageInput import path.',
+      'Verified package source',
+      '@minchat/react-chat-ui exports MessageList and MessageInput components, but the package is not installed in this gallery build. The source is shown without a fake local transcript.',
       "import { MainContainer, MessageList, MessageInput } from '@minchat/react-chat-ui';",
       sources.minchat
     ),
@@ -231,8 +260,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'react-simple-chatbot',
-      'Offline echo source demo',
-      'react-simple-chatbot is a self-contained component; the live surface renders the offline echo runtime against the real ChatBot import shown below.',
+      'Verified package source',
+      'react-simple-chatbot is a self-contained component package, but it is not installed in this gallery build. The source is shown without a fake local transcript.',
       "import ChatBot from 'react-simple-chatbot';",
       sources.reactSimpleChatbot
     ),
@@ -339,8 +368,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'react-chatbot-kit',
-      'Offline echo source demo',
-      'react-chatbot-kit ships config, parser, and provider modules; the live surface renders the offline echo runtime against the real Chatbot import shown below.',
+      'Verified package source',
+      'react-chatbot-kit ships config, parser, and provider modules, but it is not installed in this gallery build. The source is shown without a fake local transcript.',
       "import Chatbot from 'react-chatbot-kit';",
       sources.reactChatbotKit
     ),
@@ -446,8 +475,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'nlux',
-      'Offline echo adapter demo',
-      'NLUX needs an LLM adapter; the live surface renders the offline echo runtime against the real AiChat import shown below.',
+      'Verified package source',
+      'NLUX exports AiChat and expects an adapter. The package is not installed in this gallery build, so the source is shown without a fake local transcript.',
       "import { AiChat } from '@nlux/react';",
       sources.nlux
     ),
@@ -553,8 +582,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'livechat-source',
-      'Hosted widget source preview',
-      'LiveChatWidget requires a paid LiveChat licence; the live surface shows the published widget source plus an offline transcript that exercises the composer.',
+      'Credential-gated hosted widget',
+      'LiveChatWidget requires a LiveChat licence. The gallery shows the published widget source and disables local sending instead of faking LiveChat data.',
       "import { LiveChatWidget } from '@livechat/widget-react';",
       sources.livechat
     ),
@@ -656,8 +685,8 @@ export const extendedChatProfiles = [
     },
     integration: integration(
       'rocket-chat-fuselage',
-      'Offline echo primitive demo',
-      'Rocket.Chat Fuselage ships UI primitives; the live surface composes Box, Avatar, and MessageHeader against the offline echo runtime.',
+      'UI primitives source',
+      'Rocket.Chat Fuselage ships design-system primitives rather than a complete chat surface. The gallery shows the primitive source without a fake local transcript.',
       "import { Box, Avatar, MessageHeader } from '@rocket.chat/fuselage';",
       sources.rocketChat
     ),
@@ -754,14 +783,14 @@ export const extendedChatProfiles = [
     maintenance: {
       githubUrl: 'https://github.com/vercel/ai',
       license: 'Apache-2.0',
-      latestVersion: '6.0.177',
-      lastReleaseAt: '2026-05-11',
-      stars: 24150,
+      latestVersion: '6.0.180',
+      lastReleaseAt: '2026-05-12',
+      stars: 24207,
     },
     integration: integration(
       'vercel-ai',
-      'Offline echo runtime demo',
-      'Vercel AI useChat normally calls an API route; the live surface runs the offline echo runtime so the composer round-trips a reply locally against the real hook source shown below.',
+      'Hook source',
+      'Vercel AI useChat provides chat state and transport hooks, not a prebuilt chat UI. The gallery shows the hook source without a fake local transcript.',
       "import { useChat } from 'ai/react';",
       sources.vercelAi
     ),
@@ -847,6 +876,220 @@ export const extendedChatProfiles = [
           'Add tool result examples.',
           'Agrega ejemplos de resultados.',
           'ツール結果の例を追加。'
+        ),
+      },
+    ],
+  },
+  {
+    id: 'react-chatbotify',
+    name: 'React ChatBotify',
+    packageName: 'react-chatbotify',
+    marketPosition: 'Configurable React chatbot component with flow blocks',
+    sourceUrls: [
+      'https://react-chatbotify.com',
+      'https://www.npmjs.com/package/react-chatbotify',
+    ],
+    maintenance: {
+      githubUrl: 'https://github.com/react-chatbotify/react-chatbotify',
+      license: 'MIT',
+      latestVersion: '2.5.0',
+      lastReleaseAt: '2025-11-18',
+      stars: 438,
+    },
+    integration: integration(
+      'react-chatbotify',
+      'Verified package source',
+      'React ChatBotify exports a configurable ChatBot component, but the package is not installed in this gallery build. The source is shown without a fake local transcript.',
+      "import ChatBot from 'react-chatbotify';",
+      sources.reactChatbotify
+    ),
+    accent: '#2563eb',
+    background: '#dbeafe',
+    avatar: 'CB',
+    audience: 'Teams that need a scripted chatbot with extensible flow blocks.',
+    featureHighlights: [
+      'Flow object',
+      'ChatBot component',
+      'Theming',
+      'Input validation',
+      'Event hooks',
+    ],
+    configurableSurfaces: [
+      'Flow nodes',
+      'Theme options',
+      'Bot settings',
+      'Event handlers',
+    ],
+    designRecommendations: [
+      'Keep flow nodes small enough to test independently.',
+      'Put handoff actions in explicit blocks instead of hidden side effects.',
+      'Use typed flow fixtures for regression tests.',
+    ],
+    featureMatrix: {
+      avatar: true,
+      senderName: false,
+      timestamp: false,
+      reply: false,
+      markdownMessages: false,
+      markdownComposer: false,
+      textAreaComposer: false,
+      contentEditableComposer: false,
+      inlineComposer: true,
+      threads: false,
+      typing: true,
+      reactions: false,
+      fileAttachments: true,
+      aiStreaming: false,
+      moderation: false,
+    },
+    limitations: [
+      'Scripted chatbot model, not a multi-user chat surface.',
+      'Package is not installed in this repository yet.',
+    ],
+    lockIns: ['Conversation flow is defined in ChatBotify-specific objects.'],
+    participants: [
+      { id: 'bot', name: 'Flow Bot', role: 'Bot' },
+      { id: 'visitor', name: 'Visitor', role: 'User' },
+    ],
+    messages: [
+      {
+        id: 'cbf-1',
+        authorId: 'bot',
+        sentAt: '18:00',
+        status: 'read',
+        text: localizedText(
+          'Which onboarding path do you need?',
+          'Que ruta de onboarding necesitas?',
+          'どのオンボーディング手順が必要ですか?'
+        ),
+      },
+      {
+        id: 'cbf-2',
+        authorId: 'visitor',
+        sentAt: '18:01',
+        status: 'read',
+        text: localizedText(
+          'Billing setup.',
+          'Configuracion de facturacion.',
+          '請求設定です。'
+        ),
+      },
+      {
+        id: 'cbf-3',
+        authorId: 'bot',
+        sentAt: '18:02',
+        status: 'sent',
+        text: localizedText(
+          'Opening the billing flow.',
+          'Abriendo el flujo de facturacion.',
+          '請求フローを開きます。'
+        ),
+      },
+    ],
+  },
+  {
+    id: 'react-chat-widget',
+    name: 'React Chat Widget',
+    packageName: 'react-chat-widget',
+    marketPosition: 'Embeddable website chat widget component',
+    sourceUrls: [
+      'https://github.com/Wolox/react-chat-widget',
+      'https://www.npmjs.com/package/react-chat-widget',
+    ],
+    maintenance: {
+      githubUrl: 'https://github.com/Wolox/react-chat-widget',
+      license: 'MIT',
+      latestVersion: '3.1.4',
+      lastReleaseAt: '2021-12-01',
+      stars: 1572,
+    },
+    integration: integration(
+      'react-chat-widget',
+      'Verified package source',
+      'react-chat-widget exports an embeddable Widget component, but the package is not installed in this gallery build. The source is shown without a fake local transcript.',
+      "import { Widget } from 'react-chat-widget';",
+      sources.reactChatWidget
+    ),
+    accent: '#0891b2',
+    background: '#cffafe',
+    avatar: 'CW',
+    audience: 'Marketing and support sites that need a small chat launcher.',
+    featureHighlights: [
+      'Widget component',
+      'Launcher button',
+      'Response helpers',
+      'Unread badge',
+      'CSS theme',
+    ],
+    configurableSurfaces: [
+      'Title and subtitle',
+      'Launcher behavior',
+      'Response callbacks',
+      'Stylesheet overrides',
+    ],
+    designRecommendations: [
+      'Treat the launcher state as application state for analytics.',
+      'Wrap imperative response helpers behind a small adapter.',
+      'Check maintenance risk before choosing it for new products.',
+    ],
+    featureMatrix: {
+      avatar: true,
+      senderName: true,
+      timestamp: false,
+      reply: false,
+      markdownMessages: false,
+      markdownComposer: false,
+      textAreaComposer: false,
+      contentEditableComposer: false,
+      inlineComposer: true,
+      threads: false,
+      typing: false,
+      reactions: false,
+      fileAttachments: true,
+      aiStreaming: false,
+      moderation: false,
+    },
+    limitations: [
+      'Latest npm release is from 2021.',
+      'Imperative helpers make state harder to test.',
+    ],
+    lockIns: ['Widget API and stylesheet class names are package-specific.'],
+    participants: [
+      { id: 'agent', name: 'Agent', role: 'Support' },
+      { id: 'visitor', name: 'Visitor', role: 'User' },
+    ],
+    messages: [
+      {
+        id: 'cw-1',
+        authorId: 'agent',
+        sentAt: '19:00',
+        status: 'read',
+        text: localizedText(
+          'Welcome. What page are you viewing?',
+          'Bienvenido. Que pagina estas viendo?',
+          'ようこそ。どのページを見ていますか?'
+        ),
+      },
+      {
+        id: 'cw-2',
+        authorId: 'visitor',
+        sentAt: '19:01',
+        status: 'read',
+        text: localizedText(
+          'The pricing page.',
+          'La pagina de precios.',
+          '料金ページです。'
+        ),
+      },
+      {
+        id: 'cw-3',
+        authorId: 'agent',
+        sentAt: '19:02',
+        status: 'sent',
+        text: localizedText(
+          'I can route you to billing.',
+          'Te puedo enviar a facturacion.',
+          '請求担当へつなげます。'
         ),
       },
     ],

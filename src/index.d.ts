@@ -33,6 +33,7 @@ export interface ChatDemoIntegration {
   sourceCode: string;
   codeLineCount: number;
   codeSymbolCount: number;
+  capability?: RendererCapability;
 }
 
 export interface ChatMessage {
@@ -41,6 +42,7 @@ export interface ChatMessage {
   sentAt: string;
   status: string;
   text: Record<string, string>;
+  replyToId?: string | null;
 }
 
 export interface ChatDemo {
@@ -70,6 +72,7 @@ export interface StoredChatMessage {
   text: string;
   storageId: number;
   codePointCount: number;
+  replyToId: string | null;
 }
 
 export interface ChatDemoSnapshot extends Omit<
@@ -84,6 +87,7 @@ export interface ChatDemoSnapshot extends Omit<
 }
 
 export interface ChatDemoSummary {
+  canCompose: boolean;
   id: string;
   name: string;
   packageName: string;
@@ -93,7 +97,24 @@ export interface ChatDemoSummary {
   integrationStatus: string;
   accent: string;
   avatar: string;
+  liveTier: string;
+  score: number;
+  isOwn: boolean;
 }
+
+export interface RendererCapability {
+  rendererId: string;
+  tier: string;
+  interactive: boolean;
+  label: string;
+  reason: string;
+  scoreCap?: number;
+}
+
+export type RendererCapabilityRegistry = Record<
+  string,
+  Omit<RendererCapability, 'rendererId'>
+>;
 
 export interface DoubletsStoreStats {
   backend: string;
@@ -122,6 +143,7 @@ export interface DoubletsUnicodeStore {
 
 export const chatDemoCatalog: ChatDemo[];
 export const languageOptions: LanguageOption[];
+export const rendererCapabilities: RendererCapabilityRegistry;
 export const themeOptions: ThemeOption[];
 
 export function getChatDemoById(demoId?: string): ChatDemo;
@@ -136,6 +158,7 @@ export function getRequirementCoverage(): {
 }[];
 export function getThemeOption(themeId?: string): ThemeOption;
 export function listChatDemoSummaries(): ChatDemoSummary[];
+export function getRendererCapability(rendererId?: string): RendererCapability;
 
 export function createInMemoryDoubletsEngine(): object;
 export function createDoubletsUnicodeStore(options?: {

@@ -1,6 +1,10 @@
 import { ownChatProfile } from './own-chat-profile.js';
 import { extendedChatProfiles } from './extended-chat-catalog.js';
-import { rankProfiles, scoreProfile } from './profile-scoring.js';
+import {
+  getRendererCapability,
+  rankProfiles,
+  scoreProfile,
+} from './profile-scoring.js';
 
 const createMessage = (id, authorId, sentAt, status, text, meta = {}) => ({
   id,
@@ -244,15 +248,15 @@ const baseChatProfiles = [
     maintenance: {
       githubUrl: 'https://github.com/GetStream/stream-chat-react',
       license: 'SEE LICENSE IN LICENSE',
-      latestVersion: '14.1.0',
-      lastReleaseAt: '2026-05-04',
-      stars: 831,
+      latestVersion: '14.2.0',
+      lastReleaseAt: '2026-05-11',
+      stars: 832,
     },
     integration: createIntegration({
       rendererId: 'stream-source',
-      mode: 'Hosted SDK source preview',
+      mode: 'Credential-gated hosted SDK',
       status:
-        'Stream Chat requires a hosted Stream app and a user token, so the live surface shows the real published import source plus an offline transcript that exercises the composer.',
+        'Stream Chat requires a hosted Stream app and a user token. The gallery shows the real published import source and disables local sending instead of faking Stream data.',
       packageImport:
         "import { Chat, Channel, MessageList, MessageInput } from 'stream-chat-react';",
       sourceCode: chatDemoSources.streamTeam,
@@ -345,9 +349,9 @@ const baseChatProfiles = [
     },
     integration: createIntegration({
       rendererId: 'sendbird-source',
-      mode: 'Hosted UIKit source preview',
+      mode: 'Credential-gated hosted UIKit',
       status:
-        'Sendbird UIKit needs an app ID, user ID, and channel URL; the live surface shows the real published provider source plus an offline transcript that exercises the composer.',
+        'Sendbird UIKit needs an app ID, user ID, and channel URL. The gallery shows the real provider source and disables local sending instead of faking Sendbird data.',
       packageImport:
         "import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';",
       sourceCode: chatDemoSources.sendbirdMarketplace,
@@ -440,9 +444,9 @@ const baseChatProfiles = [
     },
     integration: createIntegration({
       rendererId: 'cometchat-source',
-      mode: 'Hosted UIKit source preview',
+      mode: 'Credential-gated hosted UIKit',
       status:
-        'CometChat UIKit initialisation requires app credentials; the live surface shows the published UIKit source plus an offline transcript that exercises the composer.',
+        'CometChat UIKit initialisation requires app credentials. The gallery shows the published UIKit source and disables local sending instead of faking CometChat data.',
       packageImport:
         "import { CometChatConversationsWithMessages } from '@cometchat/chat-uikit-react';",
       sourceCode: chatDemoSources.cometchatSupport,
@@ -535,9 +539,9 @@ const baseChatProfiles = [
     },
     integration: createIntegration({
       rendererId: 'talkjs-source',
-      mode: 'Hosted embed source preview',
+      mode: 'Credential-gated hosted embed',
       status:
-        'TalkJS Session and Chatbox need a TalkJS app ID and conversation reference; the live surface shows the real published import source plus an offline transcript that exercises the composer.',
+        'TalkJS Session and Chatbox need a TalkJS app ID and conversation reference. The gallery shows the real import source and disables local sending instead of faking TalkJS data.',
       packageImport: "import { Chatbox, Session } from '@talkjs/react';",
       sourceCode: chatDemoSources.talkjsCommerce,
     }),
@@ -809,7 +813,7 @@ const baseChatProfiles = [
       license: 'MIT',
       latestVersion: '2.4.2',
       lastReleaseAt: '2026-01-31',
-      stars: 3601,
+      stars: 3606,
     },
     integration: createIntegration({
       rendererId: 'deep-chat',
@@ -900,13 +904,13 @@ const baseChatProfiles = [
       license: 'MIT',
       latestVersion: '0.14.0',
       lastReleaseAt: '2026-05-07',
-      stars: 9968,
+      stars: 10043,
     },
     integration: createIntegration({
       rendererId: 'assistant-ui',
-      mode: 'Offline echo runtime demo',
+      mode: 'Verified package source',
       status:
-        'assistant-ui provider runs locally with an offline echo runtime: the composer renders the real React primitives, sends a message, and acknowledges it without external services.',
+        'assistant-ui exports React thread and composer primitives, but the package is not installed in this gallery build. The source is shown without a fake local runtime.',
       packageImport:
         "import { AssistantRuntimeProvider, ThreadPrimitive } from '@assistant-ui/react';",
       sourceCode: chatDemoSources.assistantCopilot,
@@ -980,16 +984,16 @@ const baseChatProfiles = [
   },
 ];
 
-const externalProfiles = [...baseChatProfiles, ...extendedChatProfiles];
-const rankedExternal = rankProfiles(externalProfiles).map((entry) => ({
+const rankedProfiles = rankProfiles([
+  ownChatProfile,
+  ...baseChatProfiles,
+  ...extendedChatProfiles,
+]).map((entry) => ({
   ...entry.profile,
   score: entry.score,
 }));
 
-export const chatDemoCatalog = [
-  { ...ownChatProfile, score: scoreProfile(ownChatProfile) },
-  ...rankedExternal,
-];
+export const chatDemoCatalog = rankedProfiles;
 
 export function getLanguageOption(languageId = 'en') {
   return (
@@ -1014,6 +1018,7 @@ export function getLocalizedText(localizedText, languageId = 'en') {
 
 export function listChatDemoSummaries() {
   return chatDemoCatalog.map((demo) => ({
+    canCompose: getRendererCapability(demo.integration.rendererId).interactive,
     id: demo.id,
     name: demo.name,
     packageName: demo.packageName,
@@ -1024,12 +1029,14 @@ export function listChatDemoSummaries() {
     accent: demo.accent,
     avatar: demo.avatar,
     score: demo.score?.total ?? 0,
+    liveTier: demo.score?.liveTier ?? 'D',
     isOwn: demo.id === ownChatProfile.id,
   }));
 }
 
 function toComparisonRow(demo) {
   const score = demo.score ?? scoreProfile(demo);
+  const capability = getRendererCapability(demo.integration?.rendererId);
   const maintenance = demo.maintenance ?? {};
   const integration = demo.integration ?? {};
   return {
@@ -1045,13 +1052,19 @@ function toComparisonRow(demo) {
     lockIns: demo.lockIns ?? [],
     integrationMode: integration.mode,
     rendererId: integration.rendererId ?? 'unknown',
-    liveTier: score.liveTier ?? 'D',
+    capability,
+    canCompose: capability.interactive,
+    liveTier: score.liveTier ?? capability.tier,
     score,
   };
 }
 
 export function getComparisonMatrix() {
-  return chatDemoCatalog.map(toComparisonRow);
+  return chatDemoCatalog
+    .map(toComparisonRow)
+    .sort(
+      (a, b) => b.score.total - a.score.total || a.name.localeCompare(b.name)
+    );
 }
 
 export function getRequirementCoverage() {
@@ -1059,12 +1072,12 @@ export function getRequirementCoverage() {
     {
       requirement: 'Use real imports for React chat libraries where practical',
       implementation:
-        'Live local adapters import ChatScope, React Chat Elements, and Deep Chat; hosted SDK source is shown with credential requirements.',
+        'Live local adapters import ChatScope, React Chat Elements, and Deep Chat; every other profile is source-only unless its npm package is installed or its hosted credentials are available.',
     },
     {
-      requirement: 'Make the input composer work and support markdown text',
+      requirement: 'Make the input composer work only for real local demos',
       implementation:
-        'docs/chat-demos keeps per-demo composed messages and renders markdown through react-markdown.',
+        'docs/chat-demos disables the composer for source-only and credential-gated integrations instead of faking a transcript.',
     },
     {
       requirement: 'Keep theme and language switchers available by default',
@@ -1076,18 +1089,29 @@ export function getRequirementCoverage() {
         'Each catalog entry includes package version, license, GitHub stars, release date, source code, and code cost.',
     },
     {
-      requirement: 'Use fake data store with Unicode string storage',
+      requirement: 'Use fixture data store with Unicode string storage',
       implementation:
         'createChatDemoStore stores localized messages as code points.',
     },
     {
-      requirement: 'Document research and solution planning for issue 3',
-      implementation: 'docs/case-studies/issue-3 captures data and analysis.',
+      requirement: 'Document research and solution planning for issue 10',
+      implementation: 'docs/case-studies/issue-10 captures data and analysis.',
     },
     {
       requirement: 'Cover input and demos with browser tests and screenshots',
       implementation:
-        'npm run test:e2e exercises every demo, sends a message, and writes a screenshot.',
+        'npm run test:e2e exercises every demo, sends only through live local renderers, verifies source-only notices, and writes a screenshot.',
+    },
+    {
+      requirement: 'Render reply visuals only after a reply target is selected',
+      implementation:
+        'New composed messages keep replyToId null unless the user selects a message as the reply target.',
+    },
+    {
+      requirement:
+        'Compile issue 10 research and source data in this repository',
+      implementation:
+        'docs/case-studies/issue-10 stores issue, PR, CI, npm, GitHub, and case-study analysis files.',
     },
   ];
 }

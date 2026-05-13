@@ -1,22 +1,25 @@
 # React Chat UI
 
 React chat UI research demos with real package previews, source-code cost,
-theme and language switching, fake chat data, Unicode-safe Doublets storage,
+theme and language switching, fixture chat data, Unicode-safe Doublets storage,
 and browser-commander E2E verification.
 
 ## What Is Included
 
-- Eight researched React chat profiles covering hosted SDKs, UIKit libraries,
+- Eighteen researched React chat profiles covering hosted SDKs, UIKit libraries,
   open-source component kits, and AI chat widgets.
 - Live local previews for ChatScope, React Chat Elements, and Deep Chat, plus
-  credential/runtime-gated source blocks for hosted SDKs.
+  source-only blocks for packages that are not installed or require hosted
+  credentials.
 - A Vite-powered demo gallery in `docs/chat-demos`.
 - Source code, line/symbol code cost, version, license, GitHub stars, release
   date, render duration, heap estimate, and DOM node metrics for each demo.
 - Theme and language controls rendered by default for every demo.
-- A working markdown composer that appends messages inside the active demo.
-- A fake chat data store that encodes localized message strings as Unicode code
-  points in a Doublets-compatible graph, with an async `doublets-web` loader.
+- A working markdown composer for live local demos; unavailable demos keep the
+  composer disabled instead of rendering a fake transcript.
+- A fixture chat data store that encodes localized message strings as Unicode
+  code points in a Doublets-compatible graph, with an async `doublets-web`
+  loader.
 - Browser-commander E2E tests that exercise every demo and generate a review
   screenshot.
 - A case study for issue #1 in `docs/case-studies/issue-1`.
@@ -41,7 +44,7 @@ Open the Vite URL printed by `npm run demo:dev` to inspect the chat demos.
 | `npm run test:all`   | Run unit tests and E2E tests                   |
 
 The E2E screenshot is written to
-`docs/screenshots/issue-3-chat-demos.png`.
+`docs/screenshots/issue-10-chat-demos.png` by default.
 
 ## Package API
 
@@ -88,4 +91,5 @@ requirements mapping, and solution plans:
 
 - [Issue #1 case study](docs/case-studies/issue-1/README.md)
 - [Issue #3 case study](docs/case-studies/issue-3/README.md)
+- [Issue #10 case study](docs/case-studies/issue-10/README.md)
 - [Chat demo gallery](docs/chat-demos/index.html)

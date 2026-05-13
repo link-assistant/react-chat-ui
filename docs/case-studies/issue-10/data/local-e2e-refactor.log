@@ -1,0 +1,79 @@
+TAP version 13
+# Port 5173 is in use, trying another one...
+# Port 5174 is in use, trying another one...
+# Subtest: chat demo gallery e2e
+    # Subtest: renders one selectable demo for every researched chat profile
+    ok 1 - renders one selectable demo for every researched chat profile
+      ---
+      duration_ms: 4.603265
+      ...
+    # Subtest: pins our own chat profile as the first entry
+    ok 2 - pins our own chat profile as the first entry
+      ---
+      duration_ms: 4.981538
+      ...
+    # Subtest: opens every demo and only sends through verified local renderers
+    ok 3 - opens every demo and only sends through verified local renderers
+      ---
+      duration_ms: 6600.119674
+      ...
+    # Subtest: renders an external demo as one active surface without duplicated own chat
+    ok 4 - renders an external demo as one active surface without duplicated own chat
+      ---
+      duration_ms: 214.086928
+      ...
+    # Subtest: switches theme and language without losing Unicode messages
+    ok 5 - switches theme and language without losing Unicode messages
+      ---
+      duration_ms: 574.447504
+      ...
+    # Subtest: sends a composed markdown reply into the active demo
+    ok 6 - sends a composed markdown reply into the active demo
+      ---
+      duration_ms: 764.997603
+      ...
+    # Subtest: does not render reply chrome unless a reply target was selected
+    ok 7 - does not render reply chrome unless a reply target was selected
+      ---
+      duration_ms: 1290.243299
+      ...
+    # Subtest: toggles avatars, sender name, timestamps, and reply chrome
+    ok 8 - toggles avatars, sender name, timestamps, and reply chrome
+      ---
+      duration_ms: 1409.089324
+      ...
+    # Subtest: switches the composer kind between textarea, input, and contenteditable
+    ok 9 - switches the composer kind between textarea, input, and contenteditable
+      ---
+      duration_ms: 712.892718
+      ...
+    # Subtest: opens the comparison view with one row per profile
+    ok 10 - opens the comparison view with one row per profile
+      ---
+      duration_ms: 455.852313
+      ...
+    # Subtest: opens isolated micro-frontend pages for every profile
+    ok 11 - opens isolated micro-frontend pages for every profile
+      ---
+      duration_ms: 14946.592103
+      ...
+    # Subtest: captures a screenshot for PR review
+    ok 12 - captures a screenshot for PR review
+      ---
+      duration_ms: 896.685883
+      ...
+    1..12
+ok 1 - chat demo gallery e2e
+  ---
+  duration_ms: 29817.259745
+  type: 'suite'
+  ...
+1..1
+# tests 12
+# suites 1
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 30022.051983

@@ -7,6 +7,7 @@ import {
   listChatDemoSummaries,
 } from './chat-demo-catalog.js';
 import { createDoubletsUnicodeStore } from './doublets-unicode-store.js';
+import { getRendererCapability } from './profile-scoring.js';
 
 function createMessageKey(demoId, messageId, languageId) {
   return `${demoId}:${messageId}:${languageId}`;
@@ -54,6 +55,7 @@ export function createChatDemoStore(options = {}) {
       text: unicodeStore.readString(storageId),
       storageId,
       codePointCount: record.codePoints.length,
+      replyToId: message.replyToId ?? null,
     };
   }
 
@@ -69,7 +71,10 @@ export function createChatDemoStore(options = {}) {
       marketPosition: demo.marketPosition,
       audience: demo.audience,
       maintenance: { ...demo.maintenance },
-      integration: { ...demo.integration },
+      integration: {
+        ...demo.integration,
+        capability: getRendererCapability(demo.integration?.rendererId),
+      },
       accent: demo.accent,
       background: demo.background,
       avatar: demo.avatar,

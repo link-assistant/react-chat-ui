@@ -55,7 +55,7 @@ describe('chat demo catalog', () => {
 });
 
 describe('chat demo store', () => {
-  it('serves localized snapshots from the fake data store', () => {
+  it('serves localized snapshots from the fixture data store', () => {
     const store = createChatDemoStore();
     const snapshot = store.getDemoSnapshot({
       demoId: 'assistant-copilot',
@@ -70,6 +70,18 @@ describe('chat demo store', () => {
     expect(snapshot.theme.id).toBe('contrast');
     expect(snapshot.messages.length).toBe(3);
     expect(snapshot.messages[0].text.includes('未読')).toBe(true);
+  });
+
+  it('preserves explicit reply targets but does not invent them', () => {
+    const store = createChatDemoStore();
+    const snapshot = store.getDemoSnapshot({
+      demoId: 'link-assistant-own',
+      languageId: 'en',
+    });
+
+    expect(snapshot.messages[0].replyToId).toBe(null);
+    expect(snapshot.messages[1].replyToId).toBe('own-1');
+    expect(snapshot.messages[2].replyToId).toBe(null);
   });
 
   it('stores every localized message in Doublets-compatible records', () => {

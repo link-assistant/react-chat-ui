@@ -1,0 +1,88 @@
+
+> @link-assistant/react-chat-ui@0.12.0 test:e2e
+> npm run demo:generate && node --test --test-timeout=60000 tests/e2e/*.e2e.js
+
+
+> @link-assistant/react-chat-ui@0.12.0 demo:generate
+> node docs/chat-demos/scripts/generate-profile-pages.mjs
+
+Generated 18 profile pages.
+TAP version 13
+# Port 5173 is in use, trying another one...
+# Port 5174 is in use, trying another one...
+# Subtest: chat demo gallery e2e
+    # Subtest: renders one selectable demo for every researched chat profile
+    ok 1 - renders one selectable demo for every researched chat profile
+      ---
+      duration_ms: 5.261859
+      ...
+    # Subtest: orders gallery entries by computed score
+    ok 2 - orders gallery entries by computed score
+      ---
+      duration_ms: 7.623064
+      ...
+    # Subtest: opens every demo and only sends through verified local renderers
+    ok 3 - opens every demo and only sends through verified local renderers
+      ---
+      duration_ms: 6226.329361
+      ...
+    # Subtest: renders an external demo as one active surface without duplicated own chat
+    ok 4 - renders an external demo as one active surface without duplicated own chat
+      ---
+      duration_ms: 207.159698
+      ...
+    # Subtest: switches theme and language without losing Unicode messages
+    ok 5 - switches theme and language without losing Unicode messages
+      ---
+      duration_ms: 555.69943
+      ...
+    # Subtest: sends a composed markdown reply into the active demo
+    ok 6 - sends a composed markdown reply into the active demo
+      ---
+      duration_ms: 763.265053
+      ...
+    # Subtest: does not render reply chrome unless a reply target was selected
+    ok 7 - does not render reply chrome unless a reply target was selected
+      ---
+      duration_ms: 1331.083853
+      ...
+    # Subtest: toggles avatars, sender name, timestamps, and reply chrome
+    ok 8 - toggles avatars, sender name, timestamps, and reply chrome
+      ---
+      duration_ms: 1503.350421
+      ...
+    # Subtest: switches the composer kind between textarea, input, and contenteditable
+    ok 9 - switches the composer kind between textarea, input, and contenteditable
+      ---
+      duration_ms: 727.047038
+      ...
+    # Subtest: opens the comparison view with one row per profile
+    ok 10 - opens the comparison view with one row per profile
+      ---
+      duration_ms: 441.397241
+      ...
+    # Subtest: opens isolated micro-frontend pages for every profile
+    ok 11 - opens isolated micro-frontend pages for every profile
+      ---
+      duration_ms: 15138.555538
+      ...
+    # Subtest: captures a screenshot for PR review
+    ok 12 - captures a screenshot for PR review
+      ---
+      duration_ms: 1063.615143
+      ...
+    1..12
+ok 1 - chat demo gallery e2e
+  ---
+  duration_ms: 30016.498117
+  type: 'suite'
+  ...
+1..1
+# tests 12
+# suites 1
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 30240.160188
