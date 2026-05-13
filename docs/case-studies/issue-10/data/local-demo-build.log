@@ -1,0 +1,61 @@
+
+> @link-assistant/react-chat-ui@0.12.0 demo:build
+> npm run demo:generate && vite build --config docs/chat-demos/vite.config.js
+
+
+> @link-assistant/react-chat-ui@0.12.0 demo:generate
+> node docs/chat-demos/scripts/generate-profile-pages.mjs
+
+Generated 18 profile pages.
+vite v8.0.11 building client environment for production...
+[2Ktransforming...✓ 330 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/chat-demos/index.html                                             0.72 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/nlux-react.html                               0.75 kB │ gzip:   0.40 kB
+dist/chat-demos/profiles/react-chatbot-kit.html                        0.76 kB │ gzip:   0.39 kB
+dist/chat-demos/profiles/stream-team.html                              0.76 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/livechat-widget-react.html                    0.76 kB │ gzip:   0.40 kB
+dist/chat-demos/profiles/react-chat-widget.html                        0.76 kB │ gzip:   0.40 kB
+dist/chat-demos/profiles/talkjs-commerce.html                          0.76 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/link-assistant-own.html                       0.77 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/chatscope-community.html                      0.77 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/rocketchat-fuselage.html                      0.77 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/vercel-ai-sdk.html                            0.77 kB │ gzip:   0.42 kB
+dist/chat-demos/profiles/assistant-copilot.html                        0.77 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/react-simple-chatbot.html                     0.77 kB │ gzip:   0.40 kB
+dist/chat-demos/profiles/deep-chat-ai.html                             0.77 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/react-chatbotify.html                         0.77 kB │ gzip:   0.41 kB
+dist/chat-demos/profiles/cometchat-support.html                        0.78 kB │ gzip:   0.42 kB
+dist/chat-demos/profiles/react-chat-elements.html                      0.78 kB │ gzip:   0.42 kB
+dist/chat-demos/profiles/sendbird-marketplace.html                     0.78 kB │ gzip:   0.42 kB
+dist/chat-demos/profiles/minchat-react-chat-ui.html                    0.79 kB │ gzip:   0.42 kB
+dist/chat-demos/assets/styles-CnD2GRF_.css                            83.38 kB │ gzip:  13.75 kB
+dist/chat-demos/assets/profiles/nlux-react-D-vzb2jU.js                 0.09 kB │ gzip:   0.10 kB
+dist/chat-demos/assets/profiles/stream-team-tr03bo-M.js                0.09 kB │ gzip:   0.10 kB
+dist/chat-demos/assets/profiles/deep-chat-ai-CTrcvXIB.js               0.09 kB │ gzip:   0.10 kB
+dist/chat-demos/assets/profiles/vercel-ai-sdk-DirhB3t3.js              0.09 kB │ gzip:   0.10 kB
+dist/chat-demos/assets/profiles/talkjs-commerce-CgKheBCb.js            0.09 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/react-chatbotify-DoKNLDrU.js           0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/assistant-copilot-B1DM8nu4.js          0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/cometchat-support-CCPq2c3D.js          0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/react-chat-widget-BChTfMlj.js          0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/react-chatbot-kit-CmyyTp-h.js          0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/link-assistant-own-gWkpEHKD.js         0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/chatscope-community-DTkf8r7o.js        0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/react-chat-elements-CglMWj7e.js        0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/rocketchat-fuselage-BgJe1SAs.js        0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/react-simple-chatbot-Be_gyBmC.js       0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/sendbird-marketplace-Blkw9fjB.js       0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/livechat-widget-react-CuNdqlSZ.js      0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profiles/minchat-react-chat-ui-CW4KM_uo.js      0.10 kB │ gzip:   0.11 kB
+dist/chat-demos/assets/profile-page-DVEnOPGx.js                        5.52 kB │ gzip:   1.91 kB
+dist/chat-demos/assets/main-19vrnAi5.js                               15.18 kB │ gzip:   4.44 kB
+dist/chat-demos/assets/styles-BrmaLW3J.js                          1,044.16 kB │ gzip: 283.43 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 568ms

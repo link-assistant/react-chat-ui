@@ -6,7 +6,12 @@ import {
   languageOptions,
   themeOptions,
 } from '../../../src/index.js';
-import { Avatar, DemoSurface, localParticipant } from './demo-surfaces.jsx';
+import {
+  Avatar,
+  DemoSurface,
+  localParticipant,
+  stripMarkdown,
+} from './demo-surfaces.jsx';
 import { debugEnabled, debugLog } from './debug.js';
 import './styles.css';
 
@@ -52,11 +57,12 @@ function getMemoryUsageLabel() {
   return `${(memory.usedJSHeapSize / 1024 / 1024).toFixed(1)} MB`;
 }
 
-function DemoNavigation({ demos, selectedDemoId, onSelect }) {
-  const ownDemo = demos.find((demo) => demo.isOwn);
-  const rankedDemos = demos.filter((demo) => !demo.isOwn);
+function stripReplyPreview(value) {
+  return stripMarkdown(value).slice(0, 72);
+}
 
-  function renderDemoRow(demo, index = null) {
+function DemoNavigation({ demos, selectedDemoId, onSelect }) {
+  function renderDemoRow(demo, index) {
     return (
       <div
         key={demo.id}
@@ -75,11 +81,9 @@ function DemoNavigation({ demos, selectedDemoId, onSelect }) {
             <strong>{demo.name}</strong>
             <small>{demo.packageName}</small>
             <em>{demo.integrationMode}</em>
-            {index === null ? null : (
-              <b className="score-chip">
-                #{index + 1} score {demo.score}
-              </b>
-            )}
+            <b className="score-chip">
+              #{index + 1} score {demo.score}
+            </b>
           </span>
         </button>
         <a
@@ -96,10 +100,8 @@ function DemoNavigation({ demos, selectedDemoId, onSelect }) {
 
   return (
     <nav className="demo-nav" aria-label="Chat demos">
-      <p className="demo-nav-label">Own component</p>
-      {ownDemo ? renderDemoRow(ownDemo) : null}
-      <p className="demo-nav-label">Ranked libraries</p>
-      {rankedDemos.map((demo, index) => renderDemoRow(demo, index))}
+      <p className="demo-nav-label">Ranked profiles</p>
+      {demos.map((demo, index) => renderDemoRow(demo, index))}
     </nav>
   );
 }
@@ -203,9 +205,30 @@ function Toolbar({
   );
 }
 
-function Composer({ placeholder, onSend, composerKind }) {
+function Composer({
+  canCompose,
+  composerKind,
+  disabledReason,
+  onClearReply,
+  onSend,
+  placeholder,
+  selectedReplyAuthorName,
+  selectedReplyTarget,
+}) {
   const [value, setValue] = useState('');
   const editableRef = useRef(null);
+
+  if (!canCompose) {
+    return (
+      <div
+        className="composer composer-unavailable"
+        data-testid="composer-unavailable"
+      >
+        <strong>Local demo unavailable</strong>
+        <span>{disabledReason}</span>
+      </div>
+    );
+  }
 
   function submit(rawText) {
     const trimmed = rawText.trim();
@@ -240,6 +263,20 @@ function Composer({ placeholder, onSend, composerKind }) {
       data-composer-kind={composerKind}
       onSubmit={handleSubmit}
     >
+      {selectedReplyTarget && (
+        <div
+          className="selected-reply-target"
+          data-testid="selected-reply-target"
+        >
+          <span>
+            Replying to {selectedReplyAuthorName}:{' '}
+            {stripReplyPreview(selectedReplyTarget.text)}
+          </span>
+          <button type="button" onClick={onClearReply}>
+            Clear
+          </button>
+        </div>
+      )}
       {composerKind === 'textarea' && (
         <textarea
           aria-label={placeholder}
@@ -281,11 +318,13 @@ function Composer({ placeholder, onSend, composerKind }) {
 }
 
 function LibraryPreview({
-  snapshot,
   messages,
-  participants,
-  toggles,
   onMetricsChange,
+  onSelectReply,
+  participants,
+  selectedReplyId,
+  snapshot,
+  toggles,
 }) {
   const frameRef = useRef(null);
 
@@ -313,7 +352,9 @@ function LibraryPreview({
         <DemoSurface
           snapshot={snapshot}
           messages={messages}
+          onSelectReply={onSelectReply}
           participants={participants}
+          selectedReplyId={selectedReplyId}
           toggles={toggles}
         />
       </Profiler>
@@ -322,13 +363,20 @@ function LibraryPreview({
 }
 
 function MessageList({
-  snapshot,
-  messages,
-  participants,
-  toggles,
+  canCompose,
   composerKind,
-  onSend,
+  disabledReason,
+  messages,
+  onClearReply,
   onMetricsChange,
+  onSelectReply,
+  onSend,
+  participants,
+  selectedReplyAuthorName,
+  selectedReplyId,
+  selectedReplyTarget,
+  snapshot,
+  toggles,
 }) {
   return (
     <section className="conversation" aria-label={snapshot.name}>
@@ -342,12 +390,19 @@ function MessageList({
       <LibraryPreview
         snapshot={snapshot}
         messages={messages}
+        onSelectReply={onSelectReply}
         participants={participants}
+        selectedReplyId={selectedReplyId}
         toggles={toggles}
         onMetricsChange={onMetricsChange}
       />
       <Composer
+        canCompose={canCompose}
         composerKind={composerKind}
+        disabledReason={disabledReason}
+        selectedReplyAuthorName={selectedReplyAuthorName}
+        selectedReplyTarget={selectedReplyTarget}
+        onClearReply={onClearReply}
         placeholder={snapshot.language.strings.messagePlaceholder}
         onSend={onSend}
       />
@@ -371,10 +426,10 @@ const COMPARE_FEATURE_COLUMNS = [
 ];
 
 const TIER_LABEL = {
-  A: { chip: '🟢 A', title: 'Real React surface, working composer' },
-  B: { chip: '🟡 B', title: 'Offline echo adapter' },
-  C: { chip: '🟠 C', title: 'Hosted SDK source preview' },
-  D: { chip: '🔴 D', title: 'Source listing only' },
+  A: { chip: '🟢 A', title: 'Live local package with working composer' },
+  B: { chip: '🟡 B', title: 'Verified npm package source, not installed' },
+  C: { chip: '🟠 C', title: 'Primitive or hook source, not a full chat UI' },
+  D: { chip: '🔴 D', title: 'Credential-gated or unavailable locally' },
 };
 
 function FeatureBadge({ supported, label }) {
@@ -424,13 +479,13 @@ function CompareView({ rows }) {
           features, better maintenance, and more configurable surfaces. The tier
           chip reflects how much of the library actually renders in this
           gallery: <span className="tier-chip tier-a">{TIER_LABEL.A.chip}</span>{' '}
-          real React surface,{' '}
-          <span className="tier-chip tier-b">{TIER_LABEL.B.chip}</span> offline
-          echo adapter,{' '}
-          <span className="tier-chip tier-c">{TIER_LABEL.C.chip}</span> hosted
-          SDK source preview,{' '}
-          <span className="tier-chip tier-d">{TIER_LABEL.D.chip}</span> source
-          listing only.
+          live local package,{' '}
+          <span className="tier-chip tier-b">{TIER_LABEL.B.chip}</span> verified
+          npm package source,{' '}
+          <span className="tier-chip tier-c">{TIER_LABEL.C.chip}</span>{' '}
+          primitive or hook source,{' '}
+          <span className="tier-chip tier-d">{TIER_LABEL.D.chip}</span>{' '}
+          credential-gated or unavailable locally.
         </p>
       </header>
       <div className="compare-table-wrap">
@@ -615,6 +670,7 @@ function App() {
   const [themeId, setThemeId] = useState(themeOptions[0].id);
   const [composedMessages, setComposedMessages] = useState({});
   const [renderMetrics, setRenderMetrics] = useState({});
+  const [selectedReplyByDemoId, setSelectedReplyByDemoId] = useState({});
   const [toggles, setToggles] = useState(getInitialToggles);
   const [composerKind, setComposerKind] = useState(COMPOSER_KINDS[0].id);
   const [view, setView] = useState('demo');
@@ -632,8 +688,26 @@ function App() {
     [composedMessages, selectedDemoId, snapshot.messages]
   );
   const compareRows = useMemo(() => getComparisonMatrix(), []);
+  const canCompose = Boolean(snapshot.integration.capability?.interactive);
+  const selectedReplyId = selectedReplyByDemoId[selectedDemoId] ?? null;
+  const selectedReplyTarget = useMemo(
+    () => messages.find((message) => message.id === selectedReplyId) ?? null,
+    [messages, selectedReplyId]
+  );
+  const participantMap = useMemo(
+    () =>
+      new Map(participants.map((participant) => [participant.id, participant])),
+    [participants]
+  );
+  const selectedReplyAuthorName = selectedReplyTarget
+    ? (participantMap.get(selectedReplyTarget.authorId)?.name ?? 'Participant')
+    : null;
 
   function handleSend(text) {
+    if (!canCompose) {
+      return;
+    }
+
     debugLog('send', { demoId: selectedDemoId, length: text.length });
     setComposedMessages((current) => {
       const existing = current[selectedDemoId] ?? [];
@@ -646,7 +720,7 @@ function App() {
         text,
         storageId: `local-${nextIndex}`,
         codePointCount: Array.from(text).length,
-        replyToId: snapshot.messages.at(-1)?.id ?? null,
+        replyToId: selectedReplyId,
       };
 
       return {
@@ -654,6 +728,24 @@ function App() {
         [selectedDemoId]: [...existing, message],
       };
     });
+    setSelectedReplyByDemoId((current) => ({
+      ...current,
+      [selectedDemoId]: null,
+    }));
+  }
+
+  function handleSelectReply(messageId) {
+    setSelectedReplyByDemoId((current) => ({
+      ...current,
+      [selectedDemoId]: messageId,
+    }));
+  }
+
+  function handleClearReply() {
+    setSelectedReplyByDemoId((current) => ({
+      ...current,
+      [selectedDemoId]: null,
+    }));
   }
 
   function handleMetricsChange(demoId, metrics) {
@@ -713,12 +805,19 @@ function App() {
               onSelect={setSelectedDemoId}
             />
             <MessageList
+              canCompose={canCompose}
               composerKind={composerKind}
+              disabledReason={snapshot.integration.capability?.reason}
               messages={messages}
+              selectedReplyAuthorName={selectedReplyAuthorName}
+              selectedReplyId={selectedReplyId}
+              selectedReplyTarget={selectedReplyTarget}
               participants={participants}
               snapshot={snapshot}
               toggles={toggles}
+              onClearReply={handleClearReply}
               onMetricsChange={handleMetricsChange}
+              onSelectReply={handleSelectReply}
               onSend={handleSend}
             />
             <DetailRail

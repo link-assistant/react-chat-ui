@@ -1,0 +1,3 @@
+
+> @link-assistant/react-chat-ui@0.12.0 lint
+> eslint . --max-warnings 0

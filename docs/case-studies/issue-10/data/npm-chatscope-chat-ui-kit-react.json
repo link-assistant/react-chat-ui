@@ -1,0 +1,260 @@
+{
+  "_id": "@chatscope/chat-ui-kit-react@2.1.1",
+  "_rev": "39-c184fb6d0af29c59b5b175a724679d90",
+  "name": "@chatscope/chat-ui-kit-react",
+  "dist-tags": {
+    "latest": "2.1.1"
+  },
+  "versions": [
+    "1.0.0",
+    "1.0.1",
+    "1.0.2",
+    "1.0.3",
+    "1.1.0",
+    "1.2.0",
+    "1.2.1",
+    "1.2.2",
+    "1.2.3",
+    "1.3.0",
+    "1.4.0",
+    "1.5.0",
+    "1.5.1",
+    "1.5.2",
+    "1.6.0",
+    "1.6.1",
+    "1.7.0",
+    "1.7.1",
+    "1.7.2",
+    "1.8.0",
+    "1.8.1",
+    "1.8.2",
+    "1.8.3",
+    "1.9.0",
+    "1.9.1",
+    "1.9.2",
+    "1.9.3",
+    "1.9.4",
+    "1.9.5",
+    "1.9.6",
+    "1.9.7",
+    "1.9.8",
+    "1.9.9",
+    "1.10.0",
+    "1.10.1",
+    "2.0.3",
+    "2.1.0",
+    "2.1.1"
+  ],
+  "time": {
+    "created": "2020-09-22T13:52:37.225Z",
+    "modified": "2025-05-15T07:24:23.838Z",
+    "1.0.0": "2020-09-22T13:52:37.787Z",
+    "1.0.1": "2020-09-22T14:20:35.667Z",
+    "1.0.2": "2020-09-23T08:08:15.293Z",
+    "1.0.3": "2020-11-10T13:09:48.662Z",
+    "1.1.0": "2020-12-20T23:10:53.037Z",
+    "1.2.0": "2021-01-04T11:43:12.880Z",
+    "1.2.1": "2021-01-17T17:24:04.060Z",
+    "1.2.2": "2021-01-24T23:28:09.766Z",
+    "1.2.3": "2021-02-06T09:32:21.720Z",
+    "1.3.0": "2021-02-14T12:37:03.746Z",
+    "1.4.0": "2021-03-21T13:27:32.738Z",
+    "1.5.0": "2021-03-24T16:13:19.382Z",
+    "1.5.1": "2021-04-03T13:09:59.936Z",
+    "1.5.2": "2021-04-12T18:08:15.877Z",
+    "1.6.0": "2021-04-19T15:23:52.480Z",
+    "1.6.1": "2021-04-19T15:41:01.415Z",
+    "1.7.0": "2021-05-05T17:08:15.444Z",
+    "1.7.1": "2021-05-16T19:43:56.366Z",
+    "1.7.2": "2021-05-16T20:52:13.613Z",
+    "1.8.0": "2021-05-31T14:23:44.125Z",
+    "1.8.1": "2021-06-03T14:10:27.595Z",
+    "1.8.2": "2021-10-11T12:12:06.368Z",
+    "1.8.3": "2021-11-26T09:46:50.916Z",
+    "1.9.0": "2022-06-14T13:50:02.813Z",
+    "1.9.1": "2022-06-14T14:29:59.922Z",
+    "1.9.2": "2022-06-14T15:18:11.942Z",
+    "1.9.3": "2022-06-15T09:27:26.288Z",
+    "1.9.4": "2022-07-12T08:01:30.735Z",
+    "1.9.5": "2022-07-12T08:07:20.053Z",
+    "1.9.6": "2022-07-13T13:37:53.780Z",
+    "1.9.7": "2022-07-18T15:12:20.038Z",
+    "1.9.8": "2022-11-16T10:47:22.125Z",
+    "1.9.9": "2022-12-16T18:08:51.376Z",
+    "1.10.0": "2023-02-04T19:22:20.866Z",
+    "1.10.1": "2023-02-04T19:57:57.873Z",
+    "2.0.3": "2024-03-03T17:22:38.638Z",
+    "2.1.0": "2025-05-15T06:55:27.077Z",
+    "2.1.1": "2025-05-15T07:24:23.673Z"
+  },
+  "bugs": {
+    "url": "https://github.com/chatscope/chat-ui-kit-react/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://chatscope.io/",
+  "keywords": [
+    "chat",
+    "react",
+    "reactjs",
+    "ui",
+    "user interface",
+    "components",
+    "ui kit",
+    "communication",
+    "conversation",
+    "toolkit",
+    "library",
+    "frontend",
+    "reusable",
+    "feed",
+    "comments",
+    "social",
+    "talk"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatscope/chat-ui-kit-react.git"
+  },
+  "description": "React component library for creating chat interfaces",
+  "maintainers": [
+    "adt <supersnager@gmail.com>"
+  ],
+  "readmeFilename": "README.md",
+  "version": "2.1.1",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "types": "src/types/index.d.ts",
+  "peerDependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0 || ^17.0.0 || ^18.2.0 || ^19.0.0",
+    "react-dom": "^16.12.0 || ^17.0.0 || ^18.2.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.10.5",
+    "@babel/core": "7.11.4",
+    "@babel/plugin-proposal-class-properties": "7.10.4",
+    "@babel/preset-env": "7.11.5",
+    "@babel/preset-react": "7.10.4",
+    "@commitlint/cli": "11.0.0",
+    "@commitlint/config-conventional": "11.0.0",
+    "@rollup/plugin-babel": "5.2.0",
+    "@rollup/plugin-commonjs": "11.1.0",
+    "@rollup/plugin-node-resolve": "7.1.3",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "9.2.6",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "babel-eslint": "10.1.0",
+    "babel-plugin-transform-react-remove-prop-types": "0.4.24",
+    "chokidar-cli": "2.1.0",
+    "eslint": "8.6.0",
+    "eslint-plugin-jsx-a11y": "6.5.1",
+    "eslint-plugin-react": "7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "husky": "4.3.0",
+    "lint-staged": "10.4.0",
+    "prettier": "2.1.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rollup": "2.26.5",
+    "rollup-plugin-peer-deps-external": "2.2.3",
+    "rollup-plugin-terser": "5.3.0",
+    "semantic-release": "23.0.2",
+    "typescript": "^4.5.4"
+  },
+  "scripts": {
+    "build:clean": "rm -Rf dist",
+    "build:umd": "rollup -c",
+    "build:cjs": "BABEL_ENV=cjs babel src/components -d dist/cjs",
+    "build:esm": "BABEL_ENV=esm babel src/components -d dist/es",
+    "build": "yarn run build:clean && yarn run build:esm && yarn run build:cjs && yarn run build:umd",
+    "pack": "yarn pack",
+    "watch": "chokidar 'src/**/*.*' -c 'yarn run build:esm'"
+  },
+  "dependencies": {
+    "@chatscope/chat-ui-kit-styles": "^1.2.0",
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "classnames": "^2.2.6",
+    "prop-types": "^15.7.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,md,jsx}": "prettier --write"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": [
+            {
+              "type": "docs",
+              "scope": "readme",
+              "release": "patch"
+            },
+            {
+              "scope": "no-release",
+              "release": false
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md",
+          "changelogTitle": "# @chatscope/chat-ui-kit-react changelog"
+        }
+      ],
+      "@semantic-release/github",
+      "@semantic-release/npm",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "CHANGELOG.md"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
+  },
+  "gitHead": "8c690cd3ced687551cf9f8eb9000e0a60f302af4",
+  "_nodeVersion": "20.19.1",
+  "_npmVersion": "10.9.2",
+  "dist": {
+    "integrity": "sha512-rCtE9abdmAbBDkAAUYBC1TDTBMZHquqFIZhADptAfHcJ8z8W3XH/z/ZuwBSJXtzi6h1mwCNc3tBmm1A2NLGhNg==",
+    "shasum": "c4f3e22663f46dfe9a22756be8bf1a115a3366ea",
+    "tarball": "https://registry.npmjs.org/@chatscope/chat-ui-kit-react/-/chat-ui-kit-react-2.1.1.tgz",
+    "fileCount": 184,
+    "unpackedSize": 718704,
+    "signatures": [
+      {
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+        "sig": "MEUCIQCCuJppcYhucaPcl4v64SAohkUyLkuJInfImjc/51j6nwIgGsE2CIQPRohhpRMsQDqqNWe5dzpM/KT9lILixHznkMc="
+      }
+    ]
+  },
+  "_npmUser": "adt <supersnager@gmail.com>",
+  "directories": {},
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages-npm-production",
+    "tmp": "tmp/chat-ui-kit-react_2.1.1_1747293863483_0.623057069461636"
+  },
+  "_hasShrinkwrap": false
+}

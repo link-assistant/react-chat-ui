@@ -14,9 +14,11 @@ export { ownChatProfile } from './own-chat-profile.js';
 export { extendedChatProfiles } from './extended-chat-catalog.js';
 export {
   getLiveTier,
+  getRendererCapability,
   profileLiveTierPoints,
   profileScoringWeights,
   rankProfiles,
+  rendererCapabilities,
   scoreProfile,
 } from './profile-scoring.js';
 export {

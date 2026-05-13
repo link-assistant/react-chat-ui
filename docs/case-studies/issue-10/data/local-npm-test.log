@@ -1,0 +1,365 @@
+
+> @link-assistant/react-chat-ui@0.12.0 test
+> node --test --test-timeout=30000 tests/*.test.js
+
+TAP version 13
+# Subtest: profile scoring
+    # Subtest: returns a numeric total and breakdown for any profile
+    ok 1 - returns a numeric total and breakdown for any profile
+      ---
+      duration_ms: 0.715879
+      ...
+    # Subtest: ranks profiles in non-increasing order of score
+    ok 2 - ranks profiles in non-increasing order of score
+      ---
+      duration_ms: 0.159909
+      ...
+    1..2
+ok 1 - profile scoring
+  ---
+  duration_ms: 1.877695
+  type: 'suite'
+  ...
+# Subtest: chat demo catalog
+    # Subtest: sorts every chat profile by computed score
+    ok 1 - sorts every chat profile by computed score
+      ---
+      duration_ms: 0.277965
+      ...
+    # Subtest: does not force the own chat profile to the first entry
+    ok 2 - does not force the own chat profile to the first entry
+      ---
+      duration_ms: 0.161381
+      ...
+    # Subtest: extends to between 10 and 20 profiles
+    ok 3 - extends to between 10 and 20 profiles
+      ---
+      duration_ms: 0.072489
+      ...
+    # Subtest: marks the own profile in listChatDemoSummaries
+    ok 4 - marks the own profile in listChatDemoSummaries
+      ---
+      duration_ms: 0.235182
+      ...
+    # Subtest: does not describe unavailable demos as offline echo demos
+    ok 5 - does not describe unavailable demos as offline echo demos
+      ---
+      duration_ms: 0.161742
+      ...
+    # Subtest: marks credential-gated hosted SDKs as non-interactive lowest tier
+    ok 6 - marks credential-gated hosted SDKs as non-interactive lowest tier
+      ---
+      duration_ms: 0.236693
+      ...
+    1..6
+ok 2 - chat demo catalog
+  ---
+  duration_ms: 1.542193
+  type: 'suite'
+  ...
+# Subtest: comparison matrix
+    # Subtest: exposes featureMatrix, limitations, and lockIns for every profile
+    ok 1 - exposes featureMatrix, limitations, and lockIns for every profile
+      ---
+      duration_ms: 7.869191
+      ...
+    1..1
+ok 3 - comparison matrix
+  ---
+  duration_ms: 8.034468
+  type: 'suite'
+  ...
+# Subtest: check-file-line-limits.sh
+    # Subtest: defines a warning band below the hard limit
+    ok 1 - defines a warning band below the hard limit
+      ---
+      duration_ms: 0.944751
+      ...
+    # Subtest: warns without failing for files above the warning threshold
+    ok 2 - warns without failing for files above the warning threshold
+      ---
+      duration_ms: 19.451508
+      ...
+    # Subtest: still fails files over the hard limit
+    ok 3 - still fails files over the hard limit
+      ---
+      duration_ms: 17.59818
+      ...
+    # Subtest: normalizes padded wc output from BSD-like environments
+    ok 4 - normalizes padded wc output from BSD-like environments
+      ---
+      duration_ms: 31.220754
+      ...
+    1..4
+ok 4 - check-file-line-limits.sh
+  ---
+  duration_ms: 70.39809
+  type: 'suite'
+  ...
+# Subtest: CI timeout policy
+    # Subtest: sets timeout-minutes for every release workflow job
+    ok 1 - sets timeout-minutes for every release workflow job
+      ---
+      duration_ms: 1.765527
+      ...
+    # Subtest: sets timeout-minutes for every link workflow job
+    ok 2 - sets timeout-minutes for every link workflow job
+      ---
+      duration_ms: 0.165417
+      ...
+    # Subtest: parses workflow files checked out with Windows line endings
+    ok 3 - parses workflow files checked out with Windows line endings
+      ---
+      duration_ms: 0.167078
+      ...
+    # Subtest: caps individual Node.js and Bun tests at 30 seconds
+    ok 4 - caps individual Node.js and Bun tests at 30 seconds
+      ---
+      duration_ms: 1.152852
+      ...
+    1..4
+ok 5 - CI timeout policy
+  ---
+  duration_ms: 4.31234
+  type: 'suite'
+  ...
+# Subtest: create-github-release.mjs
+    # Subtest: uses gh api and reports successful creation only for exit code 0
+    ok 1 - uses gh api and reports successful creation only for exit code 0
+      ---
+      duration_ms: 0.953084
+      ...
+    # Subtest: throws when gh api exits non-zero with an unexpected error
+    ok 2 - throws when gh api exits non-zero with an unexpected error
+      ---
+      duration_ms: 0.30093
+      ...
+    # Subtest: treats already_exists as an idempotent gh api result
+    ok 3 - treats already_exists as an idempotent gh api result
+      ---
+      duration_ms: 0.183785
+      ...
+    # Subtest: passes release payload to gh api and reports success only on exit code 0
+    ok 4 - passes release payload to gh api and reports success only on exit code 0
+      ---
+      duration_ms: 88.317198
+      ...
+    # Subtest: fails when gh api exits non-zero with an unexpected error
+    ok 5 - fails when gh api exits non-zero with an unexpected error
+      ---
+      duration_ms: 86.71796
+      ...
+    # Subtest: treats already_exists as an explicit idempotent skip
+    ok 6 - treats already_exists as an explicit idempotent skip
+      ---
+      duration_ms: 69.915629
+      ...
+    1..6
+ok 6 - create-github-release.mjs
+  ---
+  duration_ms: 247.661385
+  type: 'suite'
+  ...
+# Subtest: doublets unicode string storage
+    # Subtest: round trips multilingual strings as Unicode code points
+    ok 1 - round trips multilingual strings as Unicode code points
+      ---
+      duration_ms: 1.737725
+      ...
+    # Subtest: writes an ordered link chain into the in-memory doublets engine
+    ok 2 - writes an ordered link chain into the in-memory doublets engine
+      ---
+      duration_ms: 0.444594
+      ...
+    # Subtest: can construct a store from a doublets-web compatible module
+    ok 3 - can construct a store from a doublets-web compatible module
+      ---
+      duration_ms: 0.376833
+      ...
+    1..3
+ok 7 - doublets unicode string storage
+  ---
+  duration_ms: 3.309923
+  type: 'suite'
+  ...
+# Subtest: chat demo catalog
+    # Subtest: lists researched React chat demos with default controls
+    ok 1 - lists researched React chat demos with default controls
+      ---
+      duration_ms: 0.698943
+      ...
+    # Subtest: documents features, configuration, recommendations, and sources
+    ok 2 - documents features, configuration, recommendations, and sources
+      ---
+      duration_ms: 0.371194
+      ...
+    # Subtest: maps issue requirements to implemented artifacts
+    ok 3 - maps issue requirements to implemented artifacts
+      ---
+      duration_ms: 0.545214
+      ...
+    1..3
+ok 8 - chat demo catalog
+  ---
+  duration_ms: 3.200931
+  type: 'suite'
+  ...
+# Subtest: chat demo store
+    # Subtest: serves localized snapshots from the fixture data store
+    ok 1 - serves localized snapshots from the fixture data store
+      ---
+      duration_ms: 13.117239
+      ...
+    # Subtest: preserves explicit reply targets but does not invent them
+    ok 2 - preserves explicit reply targets but does not invent them
+      ---
+      duration_ms: 9.212348
+      ...
+    # Subtest: stores every localized message in Doublets-compatible records
+    ok 3 - stores every localized message in Doublets-compatible records
+      ---
+      duration_ms: 7.038661
+      ...
+    1..3
+ok 9 - chat demo store
+  ---
+  duration_ms: 29.747583
+  type: 'suite'
+  ...
+# Subtest: package info helpers
+    # Subtest: reads scoped package names and versions from package.json content
+    ok 1 - reads scoped package names and versions from package.json content
+      ---
+      duration_ms: 0.699985
+      ...
+    # Subtest: formats npm package specifiers from the derived package name
+    ok 2 - formats npm package specifiers from the derived package name
+      ---
+      duration_ms: 0.196503
+      ...
+    # Subtest: formats changeset headers from the derived package name
+    ok 3 - formats changeset headers from the derived package name
+      ---
+      duration_ms: 0.157905
+      ...
+    # Subtest: matches changesets for the derived package name only
+    ok 4 - matches changesets for the derived package name only
+      ---
+      duration_ms: 0.270474
+      ...
+    # Subtest: reports missing package names clearly
+    ok 5 - reports missing package names clearly
+      ---
+      duration_ms: 0.105006
+      ...
+    1..5
+ok 10 - package info helpers
+  ---
+  duration_ms: 2.422207
+  type: 'suite'
+  ...
+# Subtest: release badge version normalization
+    # Subtest: strips a plain v prefix for backward compatibility
+    ok 1 - strips a plain v prefix for backward compatibility
+      ---
+      duration_ms: 1.138831
+      ...
+    # Subtest: strips a js-v prefix from multi-language release tags
+    ok 2 - strips a js-v prefix from multi-language release tags
+      ---
+      duration_ms: 0.217194
+      ...
+    # Subtest: strips a rust-v prefix from multi-language release tags
+    ok 3 - strips a rust-v prefix from multi-language release tags
+      ---
+      duration_ms: 0.111367
+      ...
+    # Subtest: escapes hyphens in prerelease versions for shields.io static badge paths
+    ok 4 - escapes hyphens in prerelease versions for shields.io static badge paths
+      ---
+      duration_ms: 0.094522
+      ...
+    # Subtest: builds a valid shields.io badge URL for prefixed tags
+    ok 5 - builds a valid shields.io badge URL for prefixed tags
+      ---
+      duration_ms: 0.104496
+      ...
+    # Subtest: builds a valid shields.io badge URL for prefixed prerelease tags
+    ok 6 - builds a valid shields.io badge URL for prefixed prerelease tags
+      ---
+      duration_ms: 0.117906
+      ...
+    1..6
+ok 11 - release badge version normalization
+  ---
+  duration_ms: 3.87761
+  type: 'suite'
+  ...
+# Subtest: setup-npm version requirements
+    # Subtest: compares semantic versions numerically
+    ok 1 - compares semantic versions numerically
+      ---
+      duration_ms: 1.039112
+      ...
+    # Subtest: requires npm 11.5.1 or later
+    ok 2 - requires npm 11.5.1 or later
+      ---
+      duration_ms: 0.203304
+      ...
+    # Subtest: requires Node.js 22.14.0 or later
+    ok 3 - requires Node.js 22.14.0 or later
+      ---
+      duration_ms: 0.199418
+      ...
+    # Subtest: selects the latest npm 11 tarball that satisfies trusted publishing
+    ok 4 - selects the latest npm 11 tarball that satisfies trusted publishing
+      ---
+      duration_ms: 0.385497
+      ...
+    1..4
+ok 12 - setup-npm version requirements
+  ---
+  duration_ms: 2.961573
+  type: 'suite'
+  ...
+# Subtest: tag prefix logic
+    # Subtest: defaults to "v" prefix (backward compatible)
+    ok 1 - defaults to "v" prefix (backward compatible)
+      ---
+      duration_ms: 1.847488
+      ...
+    # Subtest: supports "js-v" prefix for multi-language repos
+    ok 2 - supports "js-v" prefix for multi-language repos
+      ---
+      duration_ms: 0.12713
+      ...
+    # Subtest: supports "rust-v" prefix
+    ok 3 - supports "rust-v" prefix
+      ---
+      duration_ms: 0.100371
+      ...
+    # Subtest: supports empty prefix
+    ok 4 - supports empty prefix
+      ---
+      duration_ms: 0.072098
+      ...
+    # Subtest: works with pre-release versions
+    ok 5 - works with pre-release versions
+      ---
+      duration_ms: 0.115743
+      ...
+    1..5
+ok 13 - tag prefix logic
+  ---
+  duration_ms: 3.28086
+  type: 'suite'
+  ...
+1..13
+# tests 52
+# suites 13
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 323.006072

@@ -5,7 +5,11 @@ import {
   languageOptions,
   themeOptions,
 } from '../../../src/index.js';
-import { DemoSurface, localParticipant } from './demo-surfaces.jsx';
+import {
+  DemoSurface,
+  localParticipant,
+  stripMarkdown,
+} from './demo-surfaces.jsx';
 import { debugEnabled, debugLog } from './debug.js';
 import './styles.css';
 
@@ -24,6 +28,10 @@ const COMPOSER_KINDS = [
 
 const store = createChatDemoStore();
 
+function stripReplyPreview(value) {
+  return stripMarkdown(value).slice(0, 72);
+}
+
 function getInitialToggles() {
   return FEATURE_TOGGLES.reduce(
     (current, toggle) => ({ ...current, [toggle.id]: toggle.defaultValue }),
@@ -31,9 +39,30 @@ function getInitialToggles() {
   );
 }
 
-function Composer({ placeholder, onSend, composerKind }) {
+function Composer({
+  canCompose,
+  composerKind,
+  disabledReason,
+  onClearReply,
+  onSend,
+  placeholder,
+  selectedReplyAuthorName,
+  selectedReplyTarget,
+}) {
   const [value, setValue] = useState('');
   const editableRef = useRef(null);
+
+  if (!canCompose) {
+    return (
+      <div
+        className="composer composer-unavailable"
+        data-testid="composer-unavailable"
+      >
+        <strong>Local demo unavailable</strong>
+        <span>{disabledReason}</span>
+      </div>
+    );
+  }
 
   function submit(rawText) {
     const trimmed = rawText.trim();
@@ -59,6 +88,20 @@ function Composer({ placeholder, onSend, composerKind }) {
       data-composer-kind={composerKind}
       onSubmit={handleSubmit}
     >
+      {selectedReplyTarget && (
+        <div
+          className="selected-reply-target"
+          data-testid="selected-reply-target"
+        >
+          <span>
+            Replying to {selectedReplyAuthorName}:{' '}
+            {stripReplyPreview(selectedReplyTarget.text)}
+          </span>
+          <button type="button" onClick={onClearReply}>
+            Clear
+          </button>
+        </div>
+      )}
       {composerKind === 'textarea' && (
         <textarea
           aria-label={placeholder}
@@ -105,6 +148,7 @@ function ProfilePage({ demoId }) {
   const [toggles, setToggles] = useState(getInitialToggles);
   const [composerKind, setComposerKind] = useState(COMPOSER_KINDS[0].id);
   const [composed, setComposed] = useState([]);
+  const [selectedReplyId, setSelectedReplyId] = useState(null);
   const snapshot = store.getDemoSnapshot({ demoId, languageId, themeId });
   const participants = useMemo(
     () => [...snapshot.participants, localParticipant],
@@ -114,8 +158,25 @@ function ProfilePage({ demoId }) {
     () => [...snapshot.messages, ...composed],
     [composed, snapshot.messages]
   );
+  const canCompose = Boolean(snapshot.integration.capability?.interactive);
+  const selectedReplyTarget = useMemo(
+    () => messages.find((message) => message.id === selectedReplyId) ?? null,
+    [messages, selectedReplyId]
+  );
+  const participantMap = useMemo(
+    () =>
+      new Map(participants.map((participant) => [participant.id, participant])),
+    [participants]
+  );
+  const selectedReplyAuthorName = selectedReplyTarget
+    ? (participantMap.get(selectedReplyTarget.authorId)?.name ?? 'Participant')
+    : null;
 
   function handleSend(text) {
+    if (!canCompose) {
+      return;
+    }
+
     debugLog('send', { demoId, length: text.length });
     setComposed((current) => [
       ...current,
@@ -127,9 +188,10 @@ function ProfilePage({ demoId }) {
         text,
         storageId: `local-${current.length + 1}`,
         codePointCount: Array.from(text).length,
-        replyToId: snapshot.messages.at(-1)?.id ?? null,
+        replyToId: selectedReplyId,
       },
     ]);
+    setSelectedReplyId(null);
   }
 
   return (
@@ -236,12 +298,19 @@ function ProfilePage({ demoId }) {
             <DemoSurface
               snapshot={snapshot}
               messages={messages}
+              onSelectReply={setSelectedReplyId}
               participants={participants}
+              selectedReplyId={selectedReplyId}
               toggles={toggles}
             />
           </section>
           <Composer
+            canCompose={canCompose}
             composerKind={composerKind}
+            disabledReason={snapshot.integration.capability?.reason}
+            selectedReplyAuthorName={selectedReplyAuthorName}
+            selectedReplyTarget={selectedReplyTarget}
+            onClearReply={() => setSelectedReplyId(null)}
             placeholder={snapshot.language.strings.messagePlaceholder}
             onSend={handleSend}
           />

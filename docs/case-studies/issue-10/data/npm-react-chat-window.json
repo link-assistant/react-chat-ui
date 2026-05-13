@@ -1,0 +1,112 @@
+{
+  "_id": "react-chat-window@1.2.1",
+  "_rev": "18-a3b1e049dec666b07724051460c6632f",
+  "name": "react-chat-window",
+  "description": "react-chat-window React component",
+  "dist-tags": {
+    "latest": "1.2.1"
+  },
+  "versions": [
+    "1.0.0",
+    "1.0.1",
+    "1.0.2",
+    "1.0.3",
+    "1.0.4",
+    "1.0.5",
+    "1.0.6",
+    "1.0.7",
+    "1.0.8",
+    "1.1.0",
+    "1.1.1",
+    "1.2.0",
+    "1.2.1"
+  ],
+  "maintainers": [
+    "dharness <dharness.student@gmail.com>"
+  ],
+  "time": {
+    "modified": "2022-06-25T17:54:53.177Z",
+    "created": "2017-06-26T02:41:24.073Z",
+    "1.0.0": "2017-06-26T02:41:24.073Z",
+    "1.0.1": "2017-06-26T02:48:57.450Z",
+    "1.0.2": "2017-08-19T19:49:54.042Z",
+    "1.0.3": "2017-08-30T14:40:46.593Z",
+    "1.0.4": "2017-08-30T14:55:16.997Z",
+    "1.0.5": "2017-08-30T14:59:29.074Z",
+    "1.0.6": "2018-01-22T17:42:44.788Z",
+    "1.0.7": "2018-01-23T22:17:42.415Z",
+    "1.0.8": "2018-02-05T17:44:36.410Z",
+    "1.1.0": "2019-01-27T05:45:19.627Z",
+    "1.1.1": "2019-01-27T05:46:47.706Z",
+    "1.2.0": "2019-03-30T15:12:23.999Z",
+    "1.2.1": "2019-03-30T15:19:02.660Z"
+  },
+  "keywords": [
+    "react-component"
+  ],
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "users": {
+    "dharness": true,
+    "pranavq212": true,
+    "rendell": true
+  },
+  "homepage": "https://github.com/kingofthestack/react-chat-window#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kingofthestack/react-chat-window.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kingofthestack/react-chat-window/issues"
+  },
+  "author": "kingofthestack",
+  "version": "1.2.1",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "scripts": {
+    "build": "nwb build-react-component --copy-files",
+    "clean": "nwb clean-module && nwb clean-demo",
+    "start": "nwb serve-react-demo",
+    "gh:publish": "nwb build-demo && gh-pages -d demo/dist"
+  },
+  "dependencies": {
+    "emoji-js": "3.2.2",
+    "gh-pages": "^1.2.0",
+    "prop-types": "15.5.10",
+    "react-highlight.js": "1.0.5",
+    "react-linkify": "^0.2.1",
+    "socket.io-client": "2.0.3"
+  },
+  "peerDependencies": {
+    "react": "15.x"
+  },
+  "devDependencies": {
+    "nwb": "^0.23.0",
+    "react": "15.6.1",
+    "react-dom": "15.6.1"
+  },
+  "gitHead": "b112adfa20e96db938faef1bfe903aad061aff7a",
+  "_nodeVersion": "11.12.0",
+  "_npmVersion": "6.7.0",
+  "dist": {
+    "integrity": "sha512-zugMW6fCDyY7I++n06c6H8MJF3bTLpxopawiCGZ0HRb2iU4zk07DHOYVntfhK8Uz67aYU5cRJASOwQk4rdcKEQ==",
+    "shasum": "fb1b9a26ac78f38edfecf680b949ac771da19bcf",
+    "tarball": "https://registry.npmjs.org/react-chat-window/-/react-chat-window-1.2.1.tgz",
+    "fileCount": 73,
+    "unpackedSize": 1811587,
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJcn4jnCRA9TVsSAnZWagAAVigQAIkvgVI1cQqGaLdBuwp2\nLSoyyYpjS1Ace49G0PqGdwp968pVet1+TAqh2/LfgjdGHjkCalKPOQw07+5L\nuq+cmTzj3mkfcDsSAagDfdo4470TmPBGLuQthaS6j0CMc33093/Q1mHBqf2V\nc1l3YhaMwozFbu0ZnMnY9614vXISr1ihIfWRFIGWDYCrUOLvgdAFKd3XiHEI\nCu4txvs/s5cEOUdasFesuKertPTwgjPRWWsp0HR5QGhPY7tP6t0NBX8AF2M2\nJoNyI+ZJGgFCzce7EsuQT3ST3MO+Qwvlqal0DF1/rrP9MrLXgdTsHyvRNMvW\nn+dNoScSLNlrzVLADZXN82qleMnRvNpC4a4vuYZ0VBqo1zrK2dO9lHbUR1WM\njYhvkI+ROrd9TfTkqqoilQeW6SVE6lLt1yQWEFKY/h/djjtopLUkwyvjOrFv\n8AphVpuqQRjlKoXytP/aTb4qysE1HQNZUy7J7l5gAhFCah/6qRlM+NWBw1P3\n2fXUZwyc4scOHVSnzt4omxAjl3tmPs/S7r55PIaKGT9TNKMUTm/23AKxyq7p\nqm5WGPxKcfSI9UklWnB0s8gLFIXb//u5TqawayZE/zgq8UtGAA4kXAU6C/5O\ntz6KQqfsZidm21YT929NUPU/ElGwtcumeBYQmByW+FtINfQ2nyA3j8CG3G3Z\nTPfu\r\n=OUCQ\r\n-----END PGP SIGNATURE-----\r\n",
+    "signatures": [
+      {
+        "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+        "sig": "MEQCIGWD6qStEI6o4/Hemhbzyc40yoPhEa+3CHQ/hZZlOUNaAiAE12WLA/9I8gJ9959HesLeoSYmaS8TJLGKy6nIKZ5nYQ=="
+      }
+    ]
+  },
+  "_npmUser": "dharness <dharness.student@gmail.com>",
+  "directories": {},
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/react-chat-window_1.2.1_1553959142533_0.35373440286939806"
+  },
+  "_hasShrinkwrap": false
+}
